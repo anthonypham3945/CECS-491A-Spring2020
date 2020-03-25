@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "880045782517",
+    "firebase_url": "https://quikpikdb.firebaseio.com",
+    "project_id": "quikpikdb",
+    "storage_bucket": "quikpikdb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880045782517:android:05a03f3a0a2628cfac1cbc",
+        "android_client_info": {
+          "package_name": "com.example.loginpage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "880045782517-0vvio6rlojai29cahgeai4undr6eg4k6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVA7t-4c5-DP5tOnbfWmBSpOstrXlBepA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "880045782517-0vvio6rlojai29cahgeai4undr6eg4k6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880045782517:android:9598254411277645ac1cbc",
+        "android_client_info": {
+          "package_name": "com.example.quikpik"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "880045782517-0vvio6rlojai29cahgeai4undr6eg4k6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVA7t-4c5-DP5tOnbfWmBSpOstrXlBepA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "880045782517-0vvio6rlojai29cahgeai4undr6eg4k6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880045782517:android:83aa8877ea340544ac1cbc",
+        "android_client_info": {
+          "package_name": "com.google.firebase.example.fireeats"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "880045782517-0vvio6rlojai29cahgeai4undr6eg4k6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVA7t-4c5-DP5tOnbfWmBSpOstrXlBepA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "880045782517-0vvio6rlojai29cahgeai4undr6eg4k6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
