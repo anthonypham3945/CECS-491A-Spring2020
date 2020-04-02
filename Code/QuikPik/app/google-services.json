@@ -44,6 +44,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "880045782517-847qmk0e8k7btqnor1guhikni2aitvp9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quikpik",
+            "certificate_hash": "17a8275fa0e471bd4e5d4659f88d1654f4eaa695"
+          }
+        },
+        {
           "client_id": "880045782517-0vvio6rlojai29cahgeai4undr6eg4k6.apps.googleusercontent.com",
           "client_type": 3
         }
