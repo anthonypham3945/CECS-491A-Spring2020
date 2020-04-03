@@ -42,10 +42,10 @@ public class Register extends AppCompatActivity {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
-        /*if(mAuth.getCurrentUser() != null){
+       if(mAuth.getCurrentUser() != null){
             startActivity(new Intent(getApplicationContext(),MainActivity.class));
             finish();
-        }*/
+        }
 
         // Create a new user with a first and last name
         final Map<String, Object> user = new HashMap<>();
@@ -94,14 +94,14 @@ public class Register extends AppCompatActivity {
 
                 progressBar.setVisibility(View.VISIBLE);
                 //registering the user in firebase
-                user.put("email", email);
-                user.put("password", password);
+                //user.put("email", email);
+                //user.put("password", password);
                 mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(Register.this, "User Created.", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                            startActivity(new Intent(getApplicationContext(),Login.class));
                         }else{
                             Toast.makeText(Register.this,"Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MainActivity extends AppCompatActivity {
     private Button btnSignOut;
     @Override
@@ -14,21 +16,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnSignOut = (Button) findViewById(R.id.sign_out_button);
+        /*btnSignOut = (Button) findViewById(R.id.sign_out_button);
 
         btnSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateUI();
             }
-        });
+        });*/
     }
 
     /**
      * update main activity screen and switches to login screen
      */
-    private void updateUI() {
+   /* private void updateUI() {
         Intent newIntent = new Intent(this, Login.class);
         startActivity(newIntent);
+    }*/
+
+    public void signout(View view) {
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(getApplicationContext(),Login.class));
+        finish();
     }
 }

@@ -14,7 +14,9 @@
         android:gravity="center"
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
 
         <ImageView
@@ -22,27 +24,27 @@
             android:layout_height="@dimen/logo_w_h"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="30dp"
-            android:src="@mipmap/ic_launcher"
-            android:contentDescription="TODO" />
-
+            android:contentDescription="TODO"
+            android:src="@mipmap/ic_launcher" />
 
 
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints=""
             android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:singleLine="true"
-            android:textColor="@android:color/white"
-            android:autofillHints="" />
+            android:textColor="@android:color/white" />
 
 
         <EditText
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints=""
             android:focusableInTouchMode="true"
             android:hint="@string/hint_password"
             android:imeActionId="@+id/login"
@@ -51,8 +53,7 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textColor="@android:color/white"
-            tools:ignore="InvalidImeActionId"
-            android:autofillHints="" />
+            tools:ignore="InvalidImeActionId" />
 
 
         <Button
@@ -88,7 +89,6 @@
             android:layout_marginBottom="20dp"
             android:visibility="gone" />
     </LinearLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

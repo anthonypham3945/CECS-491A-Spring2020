@@ -20,16 +20,17 @@
 
         <Button
             android:id="@+id/sign_out_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="95dp"
+            android:layout_height="111dp"
+            android:layout_marginLeft="300dp"
+            android:layout_marginBottom="600dp"
             android:background="@null"
             android:text="@string/btn_sign_out"
-            android:textAllCaps="false"
+            android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:layout_marginBottom="600dp"
-            android:layout_marginLeft="300dp" />
+            android:onClick="signout"/>
 
     </RelativeLayout>
 
