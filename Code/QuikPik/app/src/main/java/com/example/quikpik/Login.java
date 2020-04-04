@@ -27,7 +27,7 @@ public class Login extends AppCompatActivity {
    //FirebaseDatabase database;
    //DatabaseReference users;
    EditText inputEmail, inputPassword;
-   Button btnSignIn;
+   Button btnSignIn, btnRegister;
    ProgressBar progressBar;
    FirebaseAuth mAuth;
     @Override
@@ -39,6 +39,15 @@ public class Login extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         mAuth = FirebaseAuth.getInstance();
         btnSignIn = findViewById(R.id.sign_in_button);
+        btnRegister = findViewById(R.id.btn_register_button);
+
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),Register.class));
+            }
+        });
+
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,8 +88,6 @@ public class Login extends AppCompatActivity {
                 });
             }
         });
-
-
 
     }
 }

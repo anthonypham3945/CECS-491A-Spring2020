@@ -70,6 +70,16 @@
             android:text="Login"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
+        <Button
+            android:id="@+id/btn_register_button"
+            style="?android:textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/btn_link_to_register"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/btn_reset_password"
