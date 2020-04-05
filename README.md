@@ -1,9 +1,7 @@
 # CECS491A Quikpik Development Github
 
-![Quikpik](/Documents/qp.png)
-<p align="center">
-  <img /Documents/qp.png/>
-</p>
+![Quikpik](/Documents/qp.png?style=centered)
+
 
 # If you DO NOT have an Android device:
 Download and install Bluestacks, [AVAILABLE HERE!](https://www.bluestacks.com/)
