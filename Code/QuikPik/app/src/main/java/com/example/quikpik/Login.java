@@ -72,7 +72,7 @@ public class Login extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(Login.this, "Login Successful.", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                            startActivity(new Intent(getApplicationContext(),MapsActivity.class));
                             progressBar.setVisibility(View.VISIBLE);
                         }else{
                             Toast.makeText(Login.this,"Email or Password was Incorrect! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
