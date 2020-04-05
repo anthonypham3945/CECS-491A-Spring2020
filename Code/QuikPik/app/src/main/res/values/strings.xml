@@ -29,4 +29,6 @@
     <string name="lbl_forgot_password">Forgot password?</string>
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
     <string name="title_activity_sign_in">SignIn</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="map_key" translatable="false">AIzaSyDjdHCqyDU5emRfk3zPpESaWp5FCIMMmBU</string>
 </resources>

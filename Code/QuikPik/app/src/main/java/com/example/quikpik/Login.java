@@ -65,12 +65,6 @@ public class Login extends AppCompatActivity {
                     return;
                 }
 
-                if (password.length() < 6) {
-                    //Toast.makeText(getApplicationContext(), "Password too short, enter minimum 6 characters!", Toast.LENGTH_SHORT).show();
-                    inputPassword.setError("Password Must Have More Than 6 Characters!");
-                    return;
-                }
-
                 //authenticate user
 
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
