@@ -25,5 +25,7 @@ You should not need an additional download.
  
 ## Option 2
 * Navigate to this web page on your Android device.
-* download .apk file to your phone.
-* open Quikpik .apk file to test!
+* Download .apk file to your phone.
+* Open Quikpik .apk file to test!
+  * Your phone might prompt to enable untrusted application sources.
+  * You can trust us ;) enable it.
