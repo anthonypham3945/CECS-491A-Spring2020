@@ -12,7 +12,8 @@ You should not need an additional download.
 ## Option 1
 * Enable Developer Mode on your android device.
   * Navigate to settings.
-  * Tap 'About Phone' 7 or 8 times to enable developer mode.
+  * Tap 'About Phone'.
+  * Tap 'Build Number' 7 or 8 times to enable developer mode.
 * Go back to settings and enter the 'Developer Mode' menu option.
 * Enable USB debugging.
 * Connect your phone to your computer.
