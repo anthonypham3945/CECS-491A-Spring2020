@@ -1,4 +1,4 @@
-# CECS491A-
+# CECS491A Quikpik Development Github
 
 # If you do not have an Android device:
 Download and install Bluestacks, [AVAILABLE HERE!](https://www.bluestacks.com/)
