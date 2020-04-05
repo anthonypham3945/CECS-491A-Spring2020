@@ -1,5 +1,7 @@
 # CECS491A Quikpik Development Github
 
+![Quikpik](/Documents/qp.png)
+
 # If you DO NOT have an Android device:
 Download and install Bluestacks, [AVAILABLE HERE!](https://www.bluestacks.com/)
 
