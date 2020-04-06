@@ -26,23 +26,24 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+/*This class is responsible for registering the user into our firebase database and authenticate them*/
 public class Register extends AppCompatActivity {
-    private EditText inputEmail, inputPassword;
-    private Button btnSignIn, btnSignUp, btnResetPassword;
-    private ProgressBar progressBar;
+    private EditText inputEmail, inputPassword; //user input of email & password
+    private Button btnSignIn, btnSignUp, btnResetPassword;//instance variables for each button in the screen of this activity
+    private ProgressBar progressBar;//progress bar that will appear when credentials are submitted
     private static final String TAG = "DocSnippets";
-    private FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;//user in the firebase db
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_register);//hooks up this class with the corresponding xml file
 
         // Access a Cloud Firestore instance from your Activity
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();//access firebase for current user
 
-       if(mAuth.getCurrentUser() != null){
+       if(mAuth.getCurrentUser() != null){ //if the user is already signed in then take them to the maps scree
             startActivity(new Intent(getApplicationContext(),MapsActivity.class));
             finish();
         }
@@ -52,6 +53,7 @@ public class Register extends AppCompatActivity {
 
         // Initialize Firebase Auth
 
+        //linking each instance variable to the buttons in the xml file
         btnSignIn = (Button) findViewById(R.id.sign_in_button);
         btnSignUp = (Button) findViewById(R.id.sign_up_button);
         inputEmail = (EditText) findViewById(R.id.email);
@@ -60,7 +62,7 @@ public class Register extends AppCompatActivity {
 
 
 
-        btnSignIn.setOnClickListener(new View.OnClickListener() {
+        btnSignIn.setOnClickListener(new View.OnClickListener() {//when the login button is clicked take user to login screen
             @Override
             public void onClick(View v) {
                 updateUI();
@@ -68,34 +70,35 @@ public class Register extends AppCompatActivity {
         });
 
 
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
+        btnSignUp.setOnClickListener(new View.OnClickListener() {//when register button is clicked
             @Override
             public void onClick(View v) {
 
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
-                if (TextUtils.isEmpty(email)) {
+                if (TextUtils.isEmpty(email)) {//checking if email is written inputted
                     //Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
                     inputEmail.setError("Email is Required!");
                     return;
                 }
 
-                if (TextUtils.isEmpty(password)) {
+                if (TextUtils.isEmpty(password)) {//checking if password is inputted
                     //Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
                     inputPassword.setError("Password is Required!");
                     return;
                 }
 
-                if (password.length() < 6) {
+                if (password.length() < 6) {//checking if password is at least 6 characters long
                     //Toast.makeText(getApplicationContext(), "Password too short, enter minimum 6 characters!", Toast.LENGTH_SHORT).show();
                     inputPassword.setError("Password Must Have More Than 6 Characters!");
                     return;
                 }
 
-                progressBar.setVisibility(View.VISIBLE);
-                //registering the user in firebase
+                progressBar.setVisibility(View.VISIBLE); //if all i success the progressbar will appear
+
                 //user.put("email", email);
                 //user.put("password", password);
+                //created user and adds them to the db
                 mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -109,6 +112,7 @@ public class Register extends AppCompatActivity {
                 });
 
                 //creatAccount(email, password);
+                //registering the user in firebase
                 // Add a new document with a generated ID
                 db.collection("qp-users")
                         .add(user)

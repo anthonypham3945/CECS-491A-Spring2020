@@ -22,18 +22,21 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/*This class is responsible for the login screen and its function*/
 public class Login extends AppCompatActivity {
    //FirebaseDatabase database;
    //DatabaseReference users;
+    //instance variable for the login page
    EditText inputEmail, inputPassword;
    Button btnSignIn, btnRegister;
    ProgressBar progressBar;
-   FirebaseAuth mAuth;
+   FirebaseAuth mAuth;//current user
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login);//joins script to the login xml file
+
+        //assigns instance variables to its xml counterpart
         inputEmail = findViewById(R.id.email);
         inputPassword = findViewById(R.id.password);
         progressBar = findViewById(R.id.progressBar);
@@ -41,40 +44,41 @@ public class Login extends AppCompatActivity {
         btnSignIn = findViewById(R.id.sign_in_button);
         btnRegister = findViewById(R.id.btn_register_button);
 
-        btnRegister.setOnClickListener(new View.OnClickListener() {
+        btnRegister.setOnClickListener(new View.OnClickListener() {//when the register button is clicked
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),Register.class));
+                startActivity(new Intent(getApplicationContext(),Register.class));//take user to the register screen
             }
         });
 
-        btnSignIn.setOnClickListener(new View.OnClickListener() {
+        btnSignIn.setOnClickListener(new View.OnClickListener() {//when the login button is clicked
             @Override
             public void onClick(View v) {
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
-                if (TextUtils.isEmpty(email)) {
+                if (TextUtils.isEmpty(email)) {//check if the user entered an email
                     //Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
                     inputEmail.setError("Email is Required!");
                     return;
                 }
 
-                if (TextUtils.isEmpty(password)) {
+                if (TextUtils.isEmpty(password)) {//check if user entered a valid password
                     //Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
                     inputPassword.setError("Password is Required!");
                     return;
                 }
 
-                //authenticate user
-
+                //authenticate user with the inputted email and password
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
+                    public void onComplete(@NonNull Task<AuthResult> task) {//if the task is completed
+                        if(task.isSuccessful()){//if task is successful
+                            //display success message
                             Toast.makeText(Login.this, "Login Successful.", Toast.LENGTH_SHORT).show();
+                            //take user to maps screen
                             startActivity(new Intent(getApplicationContext(),MapsActivity.class));
-                            progressBar.setVisibility(View.VISIBLE);
-                        }else{
+                            progressBar.setVisibility(View.VISIBLE);//progressbar becomes visible
+                        }else{//if user info is wrong prompt message
                             Toast.makeText(Login.this,"Email or Password was Incorrect! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }

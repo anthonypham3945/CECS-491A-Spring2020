@@ -1,3 +1,5 @@
+/*Test Class for testing the register window
+ * NOT USED IN THE APK RELEASE*/
 package com.example.quikpik;
 
 import androidx.annotation.NonNull;

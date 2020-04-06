@@ -1,3 +1,5 @@
+/*Test Class for testing what happens when user logs in
+ * NOT USED IN THE APK RELEASE*/
 package com.example.quikpik;
 
 import androidx.appcompat.app.AppCompatActivity;
