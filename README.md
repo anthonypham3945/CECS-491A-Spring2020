@@ -6,7 +6,8 @@
 # If you DO NOT have an Android device:
 Download and install Bluestacks, [AVAILABLE HERE!](https://www.bluestacks.com/)
 
-* Once downloaded and installed, you should be able to open the .apk file from this GitHub repo in Bluestacks.
+* Once downloaded and installed, download the .apk file for Quikpik from this github.
+* You should be able to open the .apk file from this GitHub repo in Bluestacks.
 * Test the app!
 
 # If you DO have an Android device:
