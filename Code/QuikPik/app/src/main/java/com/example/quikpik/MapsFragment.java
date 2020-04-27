@@ -19,20 +19,22 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
+/*this class provides the ViewModel of the maps fragment*/
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
-    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundle";
-    MapView mMapView;
-    GoogleMap gmap;
+    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundle"; //key for loading a map bundle
+    MapView mMapView;//map view object
+    GoogleMap gmap;//google map object
 
+    /*this method loads the fragment that is in the xml file to the app*/
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_maps, container,false);
+        View view = inflater.inflate(R.layout.fragment_maps, container,false); // the view is "inflated" into the app
         return view;
     }
 
+    /*this method creates the map in the xml file*/
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -40,14 +42,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         if(mMapView != null){
             mMapView.onCreate(null);
             mMapView.onResume();
-            mMapView.getMapAsync(this);
+            mMapView.getMapAsync(this);//syncs the map to the current version
         }
     }
 
+    /*this method updates the location of the map when it's ready*/
     @Override
     public void onMapReady(GoogleMap map) {
-        MapsInitializer.initialize(getContext());
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+        MapsInitializer.initialize(getContext());//gets the current state of the map
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)//check if user enabled their location
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -60,11 +63,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        map.setMyLocationEnabled(true);
-        gmap = map;
+        map.setMyLocationEnabled(true); //lets map access user's current location
+        gmap = map;// the map passed is initialized
 
     }
-/*
+/* unused methods maybe used in the future!
     @Override
     public void onResume() {
         super.onResume();
