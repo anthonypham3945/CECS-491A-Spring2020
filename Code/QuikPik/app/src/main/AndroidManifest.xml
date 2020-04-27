@@ -54,6 +54,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Login" />
+        <activity android:name=".Profile" />
         <activity android:name=".MainActivity" android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

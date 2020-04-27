@@ -84,10 +84,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         drawerLayout.closeDrawer(GravityCompat.START);//close the drawer when an item is selected
         if(item.getItemId() == R.id.home){//if the home item is clicked
-            fragmentManager = getSupportFragmentManager();
+            /*fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container_fragment, new MainFragment());//replace the current fragment with the home fragment
-            fragmentTransaction.commit();//commits the changes to the app
+            fragmentTransaction.replace(R.id.container_fragment, new Profile);//replace the current fragment with the home fragment
+            fragmentTransaction.commit();//commits the changes to the app*/
+            Intent loginActivity = new Intent(getApplicationContext(), Profile.class);//takes the user back to the login screen
+            startActivity(loginActivity);//start the login activity
+            finish();//finishes the process
         }
         else if(item.getItemId() == R.id.maps){//if the maps item is clicked
             fragmentManager = getSupportFragmentManager();

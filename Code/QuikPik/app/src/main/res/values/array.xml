@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name='yes_or_no'>
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+    <string-array name = 'restaurant_type'>
+        <item>Chinese</item>
+        <item>American</item>
+        <item>Italian</item>
+        <item>Mexican</item>
+        <item>Indian</item>
+    </string-array>
+    <string-array name="Dress_Codes">
+        <item>Casual</item>
+        <item>Business Casual</item>
+        <item>Formal</item>
+    </string-array>
+    <string-array name = 'Type_Of_Flavor'>
+        <item>Sweet</item>
+        <item>Spicy</item>
+        <item>Sour</item>
+        <item>Salty</item>
+        <item>Savory</item>
+    </string-array>
+</resources>
