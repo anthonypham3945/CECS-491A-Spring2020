@@ -65,6 +65,7 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent newIntent = new Intent(getApplicationContext(), Login.class);
+                startActivity(newIntent);
             }
         });
 
