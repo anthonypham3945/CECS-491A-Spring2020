@@ -1,18 +1,11 @@
-"""
-Yelp Fusion API code sample.
-
-This program demonstrates the capability of the Yelp Fusion API
-by using the Search API to query for businesses by a search term and location,
-and the Business API to query additional information about the top result
-from the search query.
-
-Please refer to http://www.yelp.com/developers/v3/documentation for the API
-documentation.
+# Yelp Fusion API Python Code
 
 This program requires the Python requests library, which you can install via:
 `pip install -r requirements.txt`.
 
-Sample usage of the program:
-`python sample.py --term="bars" --location="San Francisco, CA"`
-"""
+* To do this:
+  * Download this folder containing Sample.py and requirements.txt
+  * Extract the folder
+  * open a command prompt and navigate (using the command 'cd' to where you extracted sample.py and requirements.txt
+  * run the command ```pip install -r requirements.txt```
 
