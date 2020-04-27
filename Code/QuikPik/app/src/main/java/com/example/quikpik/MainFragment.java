@@ -4,12 +4,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-/*this class is the ViemModel for the home screen*/
+
+import java.lang.reflect.Member;
+
+/*this class is the ViewModel for the home screen*/
 public class MainFragment extends Fragment {
+
+
     /*this overrided method loads the xml file into the view of the app*/
     @Nullable
     @Override
@@ -17,4 +23,7 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container,false);
         return view;
     }
+
+
+
 }

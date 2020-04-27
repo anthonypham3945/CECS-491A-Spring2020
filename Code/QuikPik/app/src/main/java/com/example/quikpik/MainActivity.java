@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -101,5 +102,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             finish();//finishes the process
         }
         return true;
+    }
+
+
+    private EditText editText;
+    public void sendMessage(View view) {
+        /*
+        String message = editText.getText().toString();
+        if (message.length() > 0) {
+            editText.getText().clear();
+        }
+        */
     }
 }
