@@ -40,7 +40,6 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.activity_register);//hooks up this class with the corresponding xml file
 
         // Access a Cloud Firestore instance from your Activity
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();//access firebase for current user
 
        if(mAuth.getCurrentUser() != null){ //if the user is already signed in then take them to the maps scree
@@ -65,7 +64,7 @@ public class Register extends AppCompatActivity {
         btnSignIn.setOnClickListener(new View.OnClickListener() {//when the login button is clicked take user to login screen
             @Override
             public void onClick(View v) {
-                updateUI();
+                Intent newIntent = new Intent(getApplicationContext(), Login.class);
             }
         });
 
@@ -77,27 +76,22 @@ public class Register extends AppCompatActivity {
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
                 if (TextUtils.isEmpty(email)) {//checking if email is written inputted
-                    //Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
                     inputEmail.setError("Email is Required!");
                     return;
                 }
 
                 if (TextUtils.isEmpty(password)) {//checking if password is inputted
-                    //Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
                     inputPassword.setError("Password is Required!");
                     return;
                 }
 
                 if (password.length() < 6) {//checking if password is at least 6 characters long
-                    //Toast.makeText(getApplicationContext(), "Password too short, enter minimum 6 characters!", Toast.LENGTH_SHORT).show();
                     inputPassword.setError("Password Must Have More Than 6 Characters!");
                     return;
                 }
 
                 progressBar.setVisibility(View.VISIBLE); //if all i success the progressbar will appear
 
-                //user.put("email", email);
-                //user.put("password", password);
                 //created user and adds them to the db
                 mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -111,30 +105,7 @@ public class Register extends AppCompatActivity {
                     }
                 });
 
-                //creatAccount(email, password);
-                //registering the user in firebase
-                // Add a new document with a generated ID
-                db.collection("qp-users")
-                        .add(user)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                                updateUI();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error adding document", e);
-                            }
-                        });
             }
         });
-    }
-    private void updateUI() {
-        Intent newIntent = new Intent(this, Login.class);
-        startActivity(newIntent);
-
     }
 }

@@ -94,7 +94,7 @@ public class Profile extends AppCompatActivity {
                     if(!userItems.contains(position)) { //if the checked item is not in the array of checked items
                         userItems.add(position);    //add the checked item in the array
                     }
-                } else if(userItems.contains(position)) {   //if the item is in the array of user selected itemsd
+                } else if(userItems.contains(position)) {   //if the item is in the array of user selected items
                     userItems.remove(userItems.indexOf(position));  //remove the item from the list
                 }
             }

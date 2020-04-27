@@ -57,13 +57,11 @@ public class Login extends AppCompatActivity {
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
                 if (TextUtils.isEmpty(email)) {//check if the user entered an email
-                    //Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
                     inputEmail.setError("Email is Required!");
                     return;
                 }
 
                 if (TextUtils.isEmpty(password)) {//check if user entered a valid password
-                    //Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
                     inputPassword.setError("Password is Required!");
                     return;
                 }
