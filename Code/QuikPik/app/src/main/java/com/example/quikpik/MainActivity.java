@@ -1,44 +1,97 @@
-/*Test Class for testing what happens when user logs in
- * NOT USED IN THE APK RELEASE*/
+
 package com.example.quikpik;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity {
-    private Button btnSignOut;
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    FirebaseAuth mAuth;
+    FirebaseUser currentUser;
+    DrawerLayout drawerLayout;
+    ActionBarDrawerToggle actionBarDrawerToggle;
+    Toolbar toolbar;
+    NavigationView navigationView;
+    FragmentManager fragmentManager;
+    FragmentTransaction fragmentTransaction;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        drawerLayout = findViewById(R.id.drawer);
+        navigationView = findViewById(R.id.navigationView);
+        navigationView.setNavigationItemSelectedListener(this);
 
-        /*btnSignOut = (Button) findViewById(R.id.sign_out_button);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout, toolbar, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
+        actionBarDrawerToggle.syncState();
 
-        btnSignOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateUI();
-            }
-        });*/
+        //load default fragment
+        fragmentManager = getSupportFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.container_fragment, new MainFragment());
+        fragmentTransaction.commit();
+        updateNavHeader();
+
     }
 
-    /**
-     * update main activity screen and switches to login screen
-     */
-   /* private void updateUI() {
-        Intent newIntent = new Intent(this, Login.class);
-        startActivity(newIntent);
-    }*/
+    private void updateNavHeader() {
+        NavigationView navigationView = findViewById(R.id.navigationView);
+        View headerView = navigationView.getHeaderView(0);
+        //TextView navUsername = headerView.findViewById(R.id.nav_username);
+        TextView navUserEmail = headerView.findViewById(R.id.nav_user_email);
+        ImageView navUserPhoto = headerView.findViewById(R.id.nav_user_photo);
 
-    public void signout(View view) {
-        FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(getApplicationContext(),Login.class));
-        finish();
+        navUserEmail.setText(currentUser.getEmail());
+    }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        drawerLayout.closeDrawer(GravityCompat.START);
+        if(item.getItemId() == R.id.home){
+            fragmentManager = getSupportFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_fragment, new MainFragment());
+            fragmentTransaction.commit();
+        }
+        else if(item.getItemId() == R.id.maps){
+            fragmentManager = getSupportFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_fragment, new MapsFragment());
+            fragmentTransaction.commit();
+
+        }
+        else if(item.getItemId() == R.id.logout){
+            FirebaseAuth.getInstance().signOut();
+            Intent loginActivity = new Intent(getApplicationContext(), Login.class);
+            startActivity(loginActivity);
+            finish();
+        }
+        return true;
     }
 }

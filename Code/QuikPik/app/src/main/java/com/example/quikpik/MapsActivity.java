@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
@@ -14,6 +15,8 @@ import android.location.Location;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Toast;
 
@@ -168,4 +171,6 @@ public class MapsActivity extends FragmentActivity implements
         startActivity(new Intent(getApplicationContext(),Login.class));//go back to login screen
         finish();
     }
+
+
 }

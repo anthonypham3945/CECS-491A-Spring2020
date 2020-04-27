@@ -44,7 +44,7 @@ public class Register extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();//access firebase for current user
 
        if(mAuth.getCurrentUser() != null){ //if the user is already signed in then take them to the maps scree
-            startActivity(new Intent(getApplicationContext(),MapsActivity.class));
+            startActivity(new Intent(getApplicationContext(),MainActivity.class));
             finish();
         }
 

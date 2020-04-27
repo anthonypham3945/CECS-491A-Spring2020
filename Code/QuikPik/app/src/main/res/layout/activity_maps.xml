@@ -24,4 +24,7 @@
         android:textColor="@color/bg_login"
         android:textSize="20sp"
         android:textStyle="bold" />
+
+
+
 </RelativeLayout>

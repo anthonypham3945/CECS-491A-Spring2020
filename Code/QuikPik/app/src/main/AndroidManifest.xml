@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.quikpik">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -14,7 +13,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -30,7 +28,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -45,8 +42,8 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBe46LMGk4AjA2kIS_z2TOiEto06pTyxFs" />
-        <uses-library android:name="com.google.android.maps"/>
 
+        <uses-library android:name="com.google.android.maps" />
 
         <activity android:name=".MapsActivity" />
         <activity android:name=".Register">
@@ -57,7 +54,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Login" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity" android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
