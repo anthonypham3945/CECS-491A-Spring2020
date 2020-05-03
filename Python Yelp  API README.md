@@ -1,5 +1,5 @@
 # Yelp Fusion API Python Code
-Python is required to run this demo, get it here: [Download Python](https://www.python.org/downloads/)
+Python is required to run this demo, get it here: [Download Python](https://www.python.org/downloads/)  
   This program requires the Python requests library, which you can install via:
 `pip install -r requirements.txt`.
 
