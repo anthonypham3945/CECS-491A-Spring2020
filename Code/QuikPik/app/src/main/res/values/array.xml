@@ -16,11 +16,20 @@
         <item>Business Casual</item>
         <item>Formal</item>
     </string-array>
-    <string-array name = 'Type_Of_Flavor'>
+    <string-array name = "flavor_type">
         <item>Sweet</item>
         <item>Spicy</item>
         <item>Sour</item>
+        <item>Bitter</item>
         <item>Salty</item>
         <item>Savory</item>
+    </string-array>
+    <string-array name= "allergy_type">
+        <item>Egg</item>
+        <item>Fish</item>
+        <item>Milk</item>
+        <item>Peanut</item>
+        <item>Shellfish</item>
+        <item>Wheat</item>
     </string-array>
 </resources>

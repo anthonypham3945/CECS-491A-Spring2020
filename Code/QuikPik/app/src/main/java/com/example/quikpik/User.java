@@ -6,9 +6,7 @@ import java.util.Map;
 
 public class User {
     public String email;
-    public ArrayList<String> restaurantChoices;
-    public ArrayList<String> dressChoices;
-
+    public ArrayList<String> restaurantChoices, dressChoices, flavorChoices, allergyChoices;
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
@@ -22,15 +20,15 @@ public class User {
         this.email = email;
         this.restaurantChoices = new ArrayList<String>();
         this.dressChoices = new ArrayList<String>();
+        this.flavorChoices = new ArrayList<String>();
+        this.allergyChoices = new ArrayList<String>();
     }
 
     /**
      *
      * @param choices is set for the restaurants choices
      */
-    public void addRestaurantChoices(ArrayList<String> choices) {
-        this.restaurantChoices = choices;
-    }
+    public void addRestaurantChoices(ArrayList<String> choices) { this.restaurantChoices = choices; }
 
     /**
      *
@@ -39,6 +37,18 @@ public class User {
     public void addDressChoices(ArrayList<String> choices) {
         this.dressChoices = choices;
     }
+
+    /**
+     *
+     * @param choices is set for the flavor choices
+     */
+    public void addFlavorChoices(ArrayList<String> choices) { this.flavorChoices = choices;}
+
+    /**
+     *
+     * @param choices is set for the allergy choices
+     */
+    public void addAllergyChoices(ArrayList<String> choices) { this.allergyChoices = choices;}
 
     /**
      *
@@ -65,6 +75,17 @@ public class User {
     }
 
     /**
+     *
+     * @return the array list of flavor choices
+     */
+    public ArrayList<String> getFlavorChoices() { return this.flavorChoices;}
+
+    /**
+     *
+     * @return the array list of allergy choices
+     */
+    public ArrayList<String> getAllergyChoices() { return this.allergyChoices;}
+    /**
      * @return a map object with all the user data
      */
     public Map<String, Object> getUser() {
@@ -72,7 +93,8 @@ public class User {
         result.put("email", this.email);
         result.put("Restaurant Choices", this.restaurantChoices);
         result.put("Dress Choices", this.dressChoices);
-
+        result.put("Flavor Choices", this.flavorChoices);
+        result.put("Allergy Choices", this.allergyChoices);
         return result;
     }
 }

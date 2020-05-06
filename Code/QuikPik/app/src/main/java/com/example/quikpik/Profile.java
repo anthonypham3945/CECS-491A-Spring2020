@@ -26,10 +26,9 @@ import java.util.ArrayList;
 
 public class Profile extends AppCompatActivity {
 
-    Button restaurants, done, dressCodes;
+    Button restaurants, done, dressCodes, flavors, allergies;
     TextView title;
-    String[] restaurantList, dressList;
-    //boolean[] checkedItems; //holds all the checked items
+    String[] restaurantList, dressList, flavorList, allergyList;
     private FirebaseAuth mAuth;//user in the firebase db
     User user;
     private static final String TAG = "DocSnippets";
@@ -42,11 +41,15 @@ public class Profile extends AppCompatActivity {
 
         restaurants = (Button) findViewById(R.id.btnRestaurants);   // initialize button to open list of restaurants
         dressCodes = (Button) findViewById(R.id.btnDresscode);  //initialize button for dress codes
+        flavors = (Button) findViewById(R.id.btnFlavor);  //initialize button for dress codes
+        allergies = (Button) findViewById(R.id.btnAllergy);  //initialize button for dress codes
+
         done = (Button) findViewById(R.id.done);   //button to open list of restaurants
+
         restaurantList = getResources().getStringArray(R.array.restaurant_type);        //get array list of restaurants stored in array file
         dressList = getResources().getStringArray(R.array.Dress_Codes);        //get array list of dress codes stored in array file
-
-        //checkedItems = new boolean[restaurantList.length];      // initialize boolean array size for each check box
+        flavorList = getResources().getStringArray(R.array.flavor_type);        //get array list of dress codes stored in array file
+        allergyList = getResources().getStringArray(R.array.allergy_type);        //get array list of dress codes stored in array file
 
         mAuth = FirebaseAuth.getInstance();//access firebase for current user
         final FirebaseUser currentUser = mAuth.getCurrentUser(); //initializes current logged in user
@@ -63,6 +66,20 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onClick(View v) {       //calls the create check list method to create the alert dialog
                 createCheckList("Dress Codes", dressList);      //passes the the title and list of strings
+            }
+        });
+
+        flavors.setOnClickListener(new View.OnClickListener() {  //listener for the dress code button
+            @Override
+            public void onClick(View v) {       //calls the create check list method to create the alert dialog
+                createCheckList("Flavor Types", flavorList);      //passes the the title and list of strings
+            }
+        });
+
+        allergies.setOnClickListener(new View.OnClickListener() {  //listener for the dress code button
+            @Override
+            public void onClick(View v) {       //calls the create check list method to create the alert dialog
+                createCheckList("Allergy Types", allergyList);      //passes the the title and list of strings
             }
         });
 
@@ -88,9 +105,11 @@ public class Profile extends AppCompatActivity {
         final ArrayList<Integer> userItems = new ArrayList<>();   //holds items that the user has selected
         AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);    //build a pop-up display for 1-3 buttons allowing for chaining of calls
         builder.setTitle(title);  //set title text  for the dialog's window
+
         builder.setMultiChoiceItems(list, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {    //passes the array string of the list of restaurants, and the array of check boxes of each item
             @Override                                               //a method is invoked when a button in the dialog is pressed
             public void onClick(DialogInterface dialog, int position, boolean isChecked) { //listener for each check boxes
+
                 if(isChecked) { //if item is checked return true
                     if(!userItems.contains(position)) { //if the checked item is not in the array of checked items
                         userItems.add(position);    //add the checked item in the array
@@ -116,6 +135,12 @@ public class Profile extends AppCompatActivity {
                 if(title.equals("Dress Codes")) {   //if the title  of the builder matches
                     user.addDressChoices(choices);  //then add the list of items in the user object
                 }
+                if(title.equals("Flavor Types")) {   //if the title  of the builder matches
+                    user.addFlavorChoices(choices);  //then add the list of items in the user object
+                }
+                if(title.equals("Allergy Types")) {   //if the title  of the builder matches
+                    user.addAllergyChoices(choices);  //then add the list of items in the user object
+                }
             }
         });
         builder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {  //sets a listener to be invoked when the button is pressed
@@ -129,7 +154,6 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 for(int i = 0; i < checkedItems.length; i++) {  //loops through all the checked items
-                    checkedItems[i] = false;    //set each checked item to false to uncheck each box
                     userItems.clear();          //removes all the items the user selected
                 }
             }
