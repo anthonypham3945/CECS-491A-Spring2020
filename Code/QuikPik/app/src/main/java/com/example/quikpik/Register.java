@@ -74,7 +74,7 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String email = inputEmail.getText().toString().trim();
+                final String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
                 if (TextUtils.isEmpty(email)) {//checking if email is written inputted
                     inputEmail.setError("Email is Required!");
@@ -98,8 +98,20 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            Toast.makeText(Register.this, "User Created.", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(),Login.class));
+                            mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()) {
+                                        Toast.makeText(Register.this, "Register successfully", Toast.LENGTH_LONG).show();
+                                        inputEmail.setText("");
+                                        inputPassword.setText("");
+                                        startActivity(new Intent(getApplicationContext(),Login.class));
+                                    } else {
+                                        Toast.makeText(Register.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                            //Toast.makeText(Register.this, "User Created.", Toast.LENGTH_SHORT).show();
                         }else{
                             Toast.makeText(Register.this,"Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }

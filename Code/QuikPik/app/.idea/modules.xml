@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1300685790/QuikPik.iml" filepath="$PROJECT_DIR$/.idea/modules/-1300685790/QuikPik.iml" group="QuikPik" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/app.iml" filepath="$PROJECT_DIR$/.idea/app.iml" group="QuikPik/app" />
+    </modules>
+  </component>
+</project>
