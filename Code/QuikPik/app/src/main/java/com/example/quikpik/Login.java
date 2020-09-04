@@ -28,7 +28,7 @@ public class Login extends AppCompatActivity {
    //DatabaseReference users;
     //instance variable for the login page
    EditText inputEmail, inputPassword;
-   Button btnSignIn, btnRegister;
+   Button btnSignIn, btnRegister, forgotPassword;
    ProgressBar progressBar;
    FirebaseAuth mAuth;//current user
     @Override
@@ -43,6 +43,7 @@ public class Login extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         btnSignIn = findViewById(R.id.sign_in_button);
         btnRegister = findViewById(R.id.btn_register_button);
+        forgotPassword = findViewById(R.id.btn_reset_password);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {//when the register button is clicked
             @Override
@@ -84,5 +85,11 @@ public class Login extends AppCompatActivity {
             }
         });
 
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),ForgotPasswordActivity.class));//take user to the forgot password screen
+            }
+        });
     }
 }
