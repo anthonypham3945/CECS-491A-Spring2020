@@ -1,6 +1,6 @@
 # CECS491A Quikpik Development Github
 
-![Quikpik](https://github.com/anthonypham3945/CECS-491A-Spring2020/blob/master/CECS%20491A%20Material/Documents/qp.png)
+![Quikpik](https://github.com/anthonypham3945/CECS-491A-Spring2020/blob/master/CECS%20491A%20Material/Documents/qp.png?style=centered)
 
 
 # If you DO NOT have an Android device:
