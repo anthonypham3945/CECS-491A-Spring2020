@@ -1,6 +1,6 @@
 # CECS491A Quikpik Development Github
 
-![Quikpik](/Documents/qp.png?style=centered)
+![Quikpik](CECS 491A Material/Documents/qp.png?style=centered)
 
 
 # If you DO NOT have an Android device:
