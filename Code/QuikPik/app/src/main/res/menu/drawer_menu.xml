@@ -11,6 +11,10 @@
             android:icon="@drawable/current_location"
             android:title="Maps" />
         <item
+            android:id="@+id/profile"
+            android:icon="@drawable/account_icon"
+            android:title="Profile" />
+        <item
             android:id="@+id/logout"
             android:icon="@drawable/logout_icon"
             android:title="Log Out" />

@@ -1,22 +1,26 @@
 package com.example.quikpik;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -24,7 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-public class Profile extends AppCompatActivity {
+public class Profile extends AppCompatActivity{
 
     Button restaurants, done, dressCodes, flavors, allergies;
     TextView title;
@@ -38,6 +42,9 @@ public class Profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         final FirebaseFirestore db = FirebaseFirestore.getInstance();   //retrieves an instance of the firestore database
+
+
+
 
         restaurants = (Button) findViewById(R.id.btnRestaurants);   // initialize button to open list of restaurants
         dressCodes = (Button) findViewById(R.id.btnDresscode);  //initialize button for dress codes
@@ -93,6 +100,25 @@ public class Profile extends AppCompatActivity {
             }
         });
     }
+
+
+
+    /*method that hides the navigator when the back button is pressed*/
+    public void onBackPressed(){
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer);
+        if(drawer.isDrawerOpen(GravityCompat.START)){ // if the navigator is open
+            drawer.closeDrawer(GravityCompat.START);//close it
+        }else{
+            super.onBackPressed();// do normal back button functions
+        }
+    }
+
+
+
+
+
+
+
 
     /**
      *

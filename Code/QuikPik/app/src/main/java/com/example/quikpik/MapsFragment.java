@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
@@ -25,6 +26,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundle"; //key for loading a map bundle
     MapView mMapView;//map view object
     GoogleMap gmap;//google map object
+
 
     /*this method loads the fragment that is in the xml file to the app*/
     @Nullable
@@ -49,25 +51,31 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     /*this method updates the location of the map when it's ready*/
     @Override
     public void onMapReady(GoogleMap map) {
-        MapsInitializer.initialize(getContext());//gets the current state of the map
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)//check if user enabled their location
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        map.setMyLocationEnabled(true); //lets map access user's current location
         gmap = map;// the map passed is initialized
+        gmap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(new
+                LatLng(0, 0), 0));
+        if (gmap != null) {
+            MapsInitializer.initialize(getContext());//gets the current state of the map
+            //gmap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+            if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)//check if user enabled their location
+                    != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            map.setMyLocationEnabled(true); //lets map access user's current location
+            gmap.getUiSettings().setMyLocationButtonEnabled(true);
+        }
 
     }
-/* unused methods maybe used in the future!
     @Override
     public void onResume() {
         super.onResume();
@@ -101,5 +109,5 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
-    }*/
+    }
 }
