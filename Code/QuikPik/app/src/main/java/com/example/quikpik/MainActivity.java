@@ -4,22 +4,49 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
+
+
+
+import io.opencensus.tags.Tag;
+
 /*class that controls the navigation drawer and manages scene fragments*/
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     FirebaseAuth mAuth; //initialize firebase authentication
@@ -31,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FragmentManager fragmentManager;//manager of the fragment scenes
     FragmentTransaction fragmentTransaction;//switches from fragment to fragment
 
+
+
     /*overrided method that creates the default state of the layout*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +68,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = findViewById(R.id.toolbar);//assigns tool bar to the toolbar in the xml file
         setSupportActionBar(toolbar);//gives toolbar action bar support
         mAuth = FirebaseAuth.getInstance();//gets the current athentication
+
+
+
+
         currentUser = mAuth.getCurrentUser();//gets the current user logged in
         drawerLayout = findViewById(R.id.drawer);//the actual navigation drawer
         navigationView = findViewById(R.id.navigationView);//how it looks
@@ -58,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+
+
     /*this method updates the navigator header with the current user email and photo*/
     private void updateNavHeader() {
         NavigationView navigationView = findViewById(R.id.navigationView);//initializes the navigation view
@@ -68,6 +103,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navUserEmail.setText(currentUser.getEmail());//sets user email to the text in the header
     }
+
+
+
 
     /*method that hides the navigator when the back button is pressed*/
     public void onBackPressed(){

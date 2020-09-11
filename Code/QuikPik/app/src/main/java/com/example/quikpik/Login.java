@@ -36,6 +36,7 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);//joins script to the login xml file
 
+
         //assigns instance variables to its xml counterpart
         inputEmail = findViewById(R.id.email);
         inputPassword = findViewById(R.id.password);
@@ -44,6 +45,11 @@ public class Login extends AppCompatActivity {
         btnSignIn = findViewById(R.id.sign_in_button);
         btnRegister = findViewById(R.id.btn_register_button);
         forgotPassword = findViewById(R.id.btn_reset_password);
+
+        if(mAuth.getCurrentUser() != null){ //if the user is already signed in then take them to the maps scree
+            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+            finish();
+        }
 
         btnRegister.setOnClickListener(new View.OnClickListener() {//when the register button is clicked
             @Override
