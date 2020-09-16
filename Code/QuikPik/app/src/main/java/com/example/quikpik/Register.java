@@ -42,10 +42,10 @@ public class Register extends AppCompatActivity {
         // Access a Cloud Firestore instance from your Activity
         mAuth = FirebaseAuth.getInstance();//access firebase for current user
 
-       if(mAuth.getCurrentUser() != null){ //if the user is already signed in then take them to the maps scree
+       /*if(mAuth.getCurrentUser() != null){ //if the user is already signed in then take them to the maps scree
             startActivity(new Intent(getApplicationContext(),MainActivity.class));
             finish();
-        }
+        }*/
 
         // Create a new user with a first and last name
         final Map<String, Object> user = new HashMap<>();

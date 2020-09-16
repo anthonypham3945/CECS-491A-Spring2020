@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="General">
+    <item
+        android:icon="@drawable/yelp_icon"
+        android:title="General">
         <item
             android:id="@+id/home"
             android:icon="@drawable/home_icon"
             android:title="Home" />
-        <item
-            android:id="@+id/maps"
-            android:icon="@drawable/current_location"
-            android:title="Maps" />
+
         <item
             android:id="@+id/profile"
             android:icon="@drawable/account_icon"
-            android:title="Profile" />
+            android:title="Preferences" />
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/setting_icoon"
+            android:title="Settings" />
         <item
             android:id="@+id/logout"
             android:icon="@drawable/logout_icon"

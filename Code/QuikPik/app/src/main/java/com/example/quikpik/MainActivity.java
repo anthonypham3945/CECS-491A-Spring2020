@@ -17,10 +17,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,7 +45,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
-
+import com.hsalf.smilerating.SmileRating;
 
 
 import io.opencensus.tags.Tag;
@@ -70,8 +73,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAuth = FirebaseAuth.getInstance();//gets the current athentication
 
 
-
-
         currentUser = mAuth.getCurrentUser();//gets the current user logged in
         drawerLayout = findViewById(R.id.drawer);//the actual navigation drawer
         navigationView = findViewById(R.id.navigationView);//how it looks
@@ -88,8 +89,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentTransaction.add(R.id.container_fragment, new MainFragment());
         fragmentTransaction.commit();
         updateNavHeader();//updates user in the header
+        Load_setting();
 
     }
+
+
 
 
 
@@ -102,6 +106,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ImageView navUserPhoto = headerView.findViewById(R.id.nav_user_photo);//gets user picture
 
         navUserEmail.setText(currentUser.getEmail());//sets user email to the text in the header
+    }
+
+    private void Load_setting(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean chk_night = sp.getBoolean("NIGHT",false);
+        if(chk_night){
+            drawerLayout.setBackgroundColor(Color.parseColor("#222222"));
+            toolbar.setBackgroundColor(Color.parseColor("#222222"));
+            //navigationView.setBackgroundColor(Color.parseColor("#222222"));
+        }
+        else{
+            drawerLayout.setBackgroundColor(Color.parseColor("white"));
+            toolbar.setBackgroundColor(Color.parseColor("#0097a7"));
+
+        }
     }
 
 
@@ -127,14 +146,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(profileActivity);//start the login activity
             finish();//finishes the process
         }
-        else if(item.getItemId() == R.id.maps){//if the maps item is clicked
+        /*else if(item.getItemId() == R.id.maps){//if the maps item is clicked
             fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container_fragment, new MapsFragment());//replace the current fragment with the maps fragment
             fragmentTransaction.commit();//commits the changes to the app
-        }
+        }*/
         else if(item.getItemId() == R.id.profile){ //if the logout item is clicked
             Intent profileActivity = new Intent(getApplicationContext(), Profile.class);//takes the user back to the login screen
+            startActivity(profileActivity);//start the login activity
+            finish();//finishes the process
+        }
+        else if(item.getItemId() == R.id.settings){ //if the logout item is clicked
+            Intent profileActivity = new Intent(getApplicationContext(), Preference.class);//takes the user back to the login screen
             startActivity(profileActivity);//start the login activity
             finish();//finishes the process
         }
@@ -156,5 +180,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             editText.getText().clear();
         }
         */
+    }
+
+    protected void onResume(){
+        Load_setting();
+        super.onResume();
     }
 }

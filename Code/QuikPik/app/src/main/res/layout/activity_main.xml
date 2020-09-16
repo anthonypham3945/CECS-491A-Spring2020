@@ -7,6 +7,7 @@
     tools:context=".MainActivity"
     android:id="@+id/drawer">
 
+
     <include
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,12 +19,21 @@
         layout="@layout/content_main"/>
 
     <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/navigationView"
-        app:menu="@menu/drawer_menu"
-        app:headerLayout="@layout/drawer_header"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"/>
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/drawer_header"
+        app:menu="@menu/drawer_menu" />
+
+    <com.hsalf.smileyrating.SmileyRating
+        android:id="@+id/smile_rating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="false"
+        android:layout_marginVertical="@dimen/nav_header_height" />
+
+
 
 </androidx.drawerlayout.widget.DrawerLayout>
