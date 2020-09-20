@@ -28,9 +28,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-public class Profile extends AppCompatActivity{
+public class Preferences extends AppCompatActivity{
 
-    Button restaurants, done, dressCodes, flavors, allergies;
+    Button restaurants, done, dressCodes, flavors, allergies, cancel;
     TextView title;
     String[] restaurantList, dressList, flavorList, allergyList;
     private FirebaseAuth mAuth;//user in the firebase db
@@ -40,10 +40,8 @@ public class Profile extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_preferences);
         final FirebaseFirestore db = FirebaseFirestore.getInstance();   //retrieves an instance of the firestore database
-
-
 
 
         restaurants = (Button) findViewById(R.id.btnRestaurants);   // initialize button to open list of restaurants
@@ -52,6 +50,7 @@ public class Profile extends AppCompatActivity{
         allergies = (Button) findViewById(R.id.btnAllergy);  //initialize button for dress codes
 
         done = (Button) findViewById(R.id.done);   //button to open list of restaurants
+        cancel = (Button) findViewById(R.id.cancel);   //button to open list of restaurants
 
         restaurantList = getResources().getStringArray(R.array.restaurant_type);        //get array list of restaurants stored in array file
         dressList = getResources().getStringArray(R.array.Dress_Codes);        //get array list of dress codes stored in array file
@@ -90,12 +89,18 @@ public class Profile extends AppCompatActivity{
             }
         });
 
-        final DocumentReference ref = db.collection("qp-users").document(currentUser.getEmail());   //initialize a reference to the database of the current user
+        final DocumentReference ref = db.collection("user-references").document(currentUser.getEmail());   //initialize a reference to the database of the current user
 
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ref.set(user.getUser());    //creates or updates the data collection of the user
+                ref.set(user.getPreferences());    //creates or updates the data collection of the user
+                startActivity(new Intent(getApplicationContext(),MainActivity.class));//go back to login screen
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(),MainActivity.class));//go back to login screen
             }
         });
@@ -129,7 +134,7 @@ public class Profile extends AppCompatActivity{
         final ArrayList<String> choices = new ArrayList<>();        //stores the array of strings of the choices the user has checked
         final boolean[] checkedItems = new boolean[list.length];      // initialize boolean array size for each check box for the neutral button
         final ArrayList<Integer> userItems = new ArrayList<>();   //holds items that the user has selected
-        AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);    //build a pop-up display for 1-3 buttons allowing for chaining of calls
+        AlertDialog.Builder builder = new AlertDialog.Builder(Preferences.this);    //build a pop-up display for 1-3 buttons allowing for chaining of calls
         builder.setTitle(title);  //set title text  for the dialog's window
 
         builder.setMultiChoiceItems(list, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {    //passes the array string of the list of restaurants, and the array of check boxes of each item

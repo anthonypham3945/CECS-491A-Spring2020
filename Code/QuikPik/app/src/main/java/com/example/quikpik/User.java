@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class User {
-    public String email;
+    public String email, firstName, lastName;
     public ArrayList<String> restaurantChoices, dressChoices, flavorChoices, allergyChoices;
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -23,7 +23,16 @@ public class User {
         this.flavorChoices = new ArrayList<String>();
         this.allergyChoices = new ArrayList<String>();
     }
-
+    public User(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+    public String getFirstName() {
+        return this.firstName;
+    }
+    public String getLastName() {
+        return this.lastName;
+    }
     /**
      *
      * @param choices is set for the restaurants choices
@@ -89,6 +98,20 @@ public class User {
      * @return a map object with all the user data
      */
     public Map<String, Object> getUser() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("First Name", this.firstName);
+        result.put("Last Name", this.lastName);
+        //result.put("email", this.email);
+        //result.put("Restaurant Choices", this.restaurantChoices);
+        //result.put("Dress Choices", this.dressChoices);
+        //result.put("Flavor Choices", this.flavorChoices);
+        //result.put("Allergy Choices", this.allergyChoices);
+        return result;
+    }
+    /**
+     * @return a map object with all the user data
+     */
+    public Map<String, Object> getPreferences() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("email", this.email);
         result.put("Restaurant Choices", this.restaurantChoices);

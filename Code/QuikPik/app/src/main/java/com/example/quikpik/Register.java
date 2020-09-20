@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 /*This class is responsible for registering the user into our firebase database and authenticate them*/
 public class Register extends AppCompatActivity {
-    private EditText inputEmail, inputPassword; //user input of email & password
+    private EditText inputEmail, inputPassword, inputFirstName, inputLastName; //user input of email & password
     private Button btnSignIn, btnSignUp, btnResetPassword;//instance variables for each button in the screen of this activity
     private ProgressBar progressBar;//progress bar that will appear when credentials are submitted
     private static final String TAG = "DocSnippets";
@@ -41,6 +41,8 @@ public class Register extends AppCompatActivity {
 
         // Access a Cloud Firestore instance from your Activity
         mAuth = FirebaseAuth.getInstance();//access firebase for current user
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();   //retrieves an instance of the firestore database
+
 
        /*if(mAuth.getCurrentUser() != null){ //if the user is already signed in then take them to the maps scree
             startActivity(new Intent(getApplicationContext(),MainActivity.class));
@@ -57,6 +59,8 @@ public class Register extends AppCompatActivity {
         btnSignUp = (Button) findViewById(R.id.sign_up_button);
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
+        inputFirstName = (EditText) findViewById(R.id.firstName);
+        inputLastName = (EditText) findViewById(R.id.lastName);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 
@@ -76,11 +80,20 @@ public class Register extends AppCompatActivity {
 
                 final String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
+                final String firstName = inputFirstName.getText().toString().trim();
+                final String lastName = inputLastName.getText().toString().trim();
                 if (TextUtils.isEmpty(email)) {//checking if email is written inputted
                     inputEmail.setError("Email is Required!");
                     return;
                 }
-
+                if (TextUtils.isEmpty(firstName)) {//checking if email is written inputted
+                    inputFirstName.setError("First Name is Required!");
+                    return;
+                }
+                if (TextUtils.isEmpty(lastName)) {//checking if email is written inputted
+                    inputLastName.setError("Last Name is Required!");
+                    return;
+                }
                 if (TextUtils.isEmpty(password)) {//checking if password is inputted
                     inputPassword.setError("Password is Required!");
                     return;
@@ -103,8 +116,11 @@ public class Register extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()) {
                                         Toast.makeText(Register.this, "Register successfully", Toast.LENGTH_LONG).show();
-                                        inputEmail.setText("");
-                                        inputPassword.setText("");
+                                        final FirebaseUser currentUser = mAuth.getCurrentUser(); //initializes current logged in user
+                                        final DocumentReference ref = db.collection("qp-users").document(currentUser.getEmail());
+                                        User user = new User(firstName, lastName);
+                                        //inputEmail.setText("");
+                                        //inputPassword.setText("");
                                         startActivity(new Intent(getApplicationContext(),Login.class));
                                     } else {
                                         Toast.makeText(Register.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();

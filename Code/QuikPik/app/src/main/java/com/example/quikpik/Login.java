@@ -82,12 +82,13 @@ public class Login extends AppCompatActivity {
                                 startActivity(new Intent(getApplicationContext(),MainActivity.class));
                             } else {
                                 Toast.makeText(Login.this, "Please verify your email address", Toast.LENGTH_LONG).show();
+                                //progressBar.setVisibility(View.VISIBLE);//progressbar becomes visible
                             }
                             //display success message
                             //Toast.makeText(Login.this, "Login Successful.", Toast.LENGTH_SHORT).show();
                             //take user to maps screen
                             //startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                            progressBar.setVisibility(View.VISIBLE);//progressbar becomes visible
+
                         }else{//if user info is wrong prompt message
                             Toast.makeText(Login.this,"Email or Password was Incorrect! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }

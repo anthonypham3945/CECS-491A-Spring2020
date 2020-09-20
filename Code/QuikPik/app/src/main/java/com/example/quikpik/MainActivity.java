@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.commit();//commits the changes to the app
         }*/
         else if(item.getItemId() == R.id.profile){ //if the logout item is clicked
-            Intent profileActivity = new Intent(getApplicationContext(), Profile.class);//takes the user back to the login screen
+            Intent profileActivity = new Intent(getApplicationContext(), Preferences.class);//takes the user back to the login screen
             startActivity(profileActivity);//start the login activity
             finish();//finishes the process
         }
