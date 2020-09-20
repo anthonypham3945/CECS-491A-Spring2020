@@ -2,7 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:icon="@drawable/yelp_icon"
         android:title="General">
         <item
             android:id="@+id/home"
@@ -11,7 +10,7 @@
 
         <item
             android:id="@+id/profile"
-            android:icon="@drawable/account_icon"
+            android:icon="@drawable/yelp_icon"
             android:title="Preferences" />
         <item
             android:id="@+id/settings"

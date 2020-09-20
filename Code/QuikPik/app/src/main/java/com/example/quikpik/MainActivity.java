@@ -35,17 +35,22 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.hsalf.smilerating.SmileRating;
+import com.google.firebase.database.DatabaseReference;
 
 
 import io.opencensus.tags.Tag;
@@ -60,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView; // initialize how the navigation looks
     FragmentManager fragmentManager;//manager of the fragment scenes
     FragmentTransaction fragmentTransaction;//switches from fragment to fragment
-
+    private static final int PERMISSIONS_REQUEST = 100;
 
 
     /*overrided method that creates the default state of the layout*/
@@ -71,6 +76,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = findViewById(R.id.toolbar);//assigns tool bar to the toolbar in the xml file
         setSupportActionBar(toolbar);//gives toolbar action bar support
         mAuth = FirebaseAuth.getInstance();//gets the current athentication
+
+
+        //Check whether GPS tracking is enabled//
+
+        LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            finish();
+        }
+
+        //Check whether this app has access to the location permission//
+
+        int permission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+
+//If the location permission has been granted, then start the TrackerService//
+
+        if (permission == PackageManager.PERMISSION_GRANTED) {
+            startTrackerService();
+        } else {
+
+//If the app doesn’t currently have access to the user’s location, then request access//
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST);
+        }
 
 
         currentUser = mAuth.getCurrentUser();//gets the current user logged in
@@ -107,6 +138,89 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navUserEmail.setText(currentUser.getEmail());//sets user email to the text in the header
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[]
+            grantResults) {
+
+//If the permission has been granted...//
+
+        if (requestCode == PERMISSIONS_REQUEST && grantResults.length == 1
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+//...then start the GPS tracking service//
+
+            startTrackerService();
+        } else {
+
+//If the user denies the permission request, then display a toast with some more information//
+
+            Toast.makeText(this, "Please enable location services to allow GPS tracking", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+//Start the TrackerService//
+
+    private void startTrackerService() {
+        //startService(new Intent(this, TrackingService.class));
+        requestLocationUpdates();
+
+//Notify the user that tracking has been enabled//
+
+        Toast.makeText(this, "GPS tracking enabled", Toast.LENGTH_SHORT).show();
+
+//Close MainActivity//
+
+    }
+
+
+    //Initiate the request to track the device's location//
+
+    private void requestLocationUpdates() {
+        LocationRequest request = new LocationRequest();
+
+//Specify how often your app should request the device’s location//
+
+        request.setInterval(10000);
+
+//Get the most accurate location data available//
+
+        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
+        final String path = getString(R.string.firebase_path);
+        int permission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+
+//If the app currently has access to the location permission...//
+
+        if (permission == PackageManager.PERMISSION_GRANTED) {
+
+//...then request location updates//
+
+            client.requestLocationUpdates(request, new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+//Get a reference to the database, so your app can perform read and write operations//
+
+                    //DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
+                    DocumentReference ref = db.collection("user-location").document(currentUser.getEmail());
+                    Location location = locationResult.getLastLocation();
+                    if (location != null) {
+
+//Save the location data to the database//
+
+                        ref.set(location);
+                    }
+                }
+            }, null);
+        }
+    }
+
+
+
+
 
     private void Load_setting(){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
