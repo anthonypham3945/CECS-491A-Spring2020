@@ -1,6 +1,8 @@
 package com.example.quikpik;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
@@ -64,5 +66,10 @@ public class Preference extends PreferenceActivity {
     protected void onResume() {
         Load_setting();
         super.onResume();
+    }
+    public void onBackPressed() {
+        Intent intent=new Intent(Preference.this,MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
