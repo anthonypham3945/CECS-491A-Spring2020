@@ -11,7 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_weight="1"
+
+        tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,11 +29,19 @@
                 android:textSize="50dp"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/txtPreferences"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="Preferences:" />
+
             <Button
                 android:id="@+id/btnRestaurants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Select Restaurant(s)" />
+
 
             <Button
                 android:id="@+id/btnDresscode"
@@ -39,11 +49,13 @@
                 android:layout_height="wrap_content"
                 android:text="Select Dresscode(s)" />
 
+
             <Button
                 android:id="@+id/btnFlavor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Select Flavor(s)" />
+
             <Button
                 android:id="@+id/btnAllergy"
                 android:layout_width="match_parent"
@@ -65,6 +77,8 @@
                 android:id="@+id/cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@android:color/black"
+                android:textColor="@android:color/background_light"
                 android:text="Cancel" />
         </LinearLayout>
 

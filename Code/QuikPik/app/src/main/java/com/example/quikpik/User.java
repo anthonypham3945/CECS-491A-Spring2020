@@ -101,11 +101,6 @@ public class User {
         HashMap<String, Object> result = new HashMap<>();
         result.put("First Name", this.firstName);
         result.put("Last Name", this.lastName);
-        //result.put("email", this.email);
-        //result.put("Restaurant Choices", this.restaurantChoices);
-        //result.put("Dress Choices", this.dressChoices);
-        //result.put("Flavor Choices", this.flavorChoices);
-        //result.put("Allergy Choices", this.allergyChoices);
         return result;
     }
     /**
@@ -113,7 +108,6 @@ public class User {
      */
     public Map<String, Object> getPreferences() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("email", this.email);
         result.put("Restaurant Choices", this.restaurantChoices);
         result.put("Dress Choices", this.dressChoices);
         result.put("Flavor Choices", this.flavorChoices);

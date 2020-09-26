@@ -20,10 +20,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -31,7 +35,7 @@ import java.util.ArrayList;
 public class Preferences extends AppCompatActivity{
 
     Button restaurants, done, dressCodes, flavors, allergies, cancel;
-    TextView title;
+    TextView title, txtPreference;
     String[] restaurantList, dressList, flavorList, allergyList;
     private FirebaseAuth mAuth;//user in the firebase db
     User user;
@@ -42,12 +46,13 @@ public class Preferences extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
         final FirebaseFirestore db = FirebaseFirestore.getInstance();   //retrieves an instance of the firestore database
-
-
         restaurants = (Button) findViewById(R.id.btnRestaurants);   // initialize button to open list of restaurants
         dressCodes = (Button) findViewById(R.id.btnDresscode);  //initialize button for dress codes
         flavors = (Button) findViewById(R.id.btnFlavor);  //initialize button for dress codes
         allergies = (Button) findViewById(R.id.btnAllergy);  //initialize button for dress codes
+
+        txtPreference = (TextView) findViewById(R.id.txtPreferences);
+
 
         done = (Button) findViewById(R.id.done);   //button to open list of restaurants
         cancel = (Button) findViewById(R.id.cancel);   //button to open list of restaurants
@@ -61,31 +66,51 @@ public class Preferences extends AppCompatActivity{
         final FirebaseUser currentUser = mAuth.getCurrentUser(); //initializes current logged in user
         user = new User(currentUser.getEmail()); //creates an object for user to store their info
 
+        DocumentReference docRef = FirebaseFirestore.getInstance().collection("user-references").document(currentUser.getEmail());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()) {
+                        txtPreference.setText("Preferences: " + doc.getData().toString());
+                    } else {
+                        txtPreference.setText("Preferences:");
+                    }
+                }
+
+            }
+        });
+
+        final ArrayList<Integer> userRestaurants = new ArrayList<>();   //holds items that the user has selected
         restaurants.setOnClickListener(new View.OnClickListener() { //listener for the restaurant button
             @Override
             public void onClick(View v) {   //calls the create check list method to create the alert dialog
-                createCheckList("Restaurant Types", restaurantList);    //passes the the title and list of strings
+                createCheckList("Restaurant Types", restaurantList, userRestaurants);    //passes the the title and list of strings
             }
         });
 
+        final ArrayList<Integer> userDresses = new ArrayList<>();   //holds items that the user has selected
         dressCodes.setOnClickListener(new View.OnClickListener() {  //listener for the dress code button
             @Override
             public void onClick(View v) {       //calls the create check list method to create the alert dialog
-                createCheckList("Dress Codes", dressList);      //passes the the title and list of strings
+                createCheckList("Dress Codes", dressList, userDresses);      //passes the the title and list of strings
             }
         });
 
+        final ArrayList<Integer> userFlavors = new ArrayList<>();   //holds items that the user has selected
         flavors.setOnClickListener(new View.OnClickListener() {  //listener for the dress code button
             @Override
             public void onClick(View v) {       //calls the create check list method to create the alert dialog
-                createCheckList("Flavor Types", flavorList);      //passes the the title and list of strings
+                createCheckList("Flavor Types", flavorList, userFlavors);      //passes the the title and list of strings
             }
         });
 
+        final ArrayList<Integer> userAllergy = new ArrayList<>();   //holds items that the user has selected
         allergies.setOnClickListener(new View.OnClickListener() {  //listener for the dress code button
             @Override
             public void onClick(View v) {       //calls the create check list method to create the alert dialog
-                createCheckList("Allergy Types", allergyList);      //passes the the title and list of strings
+                createCheckList("Allergy Types", allergyList, userAllergy);      //passes the the title and list of strings
             }
         });
 
@@ -113,16 +138,10 @@ public class Preferences extends AppCompatActivity{
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer);
         if(drawer.isDrawerOpen(GravityCompat.START)){ // if the navigator is open
             drawer.closeDrawer(GravityCompat.START);//close it
-        }else{
-            super.onBackPressed();// do normal back button functions
-        }
+    }else{
+        super.onBackPressed();// do normal back button functions
     }
-
-
-
-
-
-
+}
 
 
     /**
@@ -130,13 +149,15 @@ public class Preferences extends AppCompatActivity{
      * @param title of the builder window
      * @param list of strings to display for each check box
      */
-    private void createCheckList(final String title, final String[] list) {
+    private void createCheckList(final String title, final String[] list, final ArrayList<Integer> userItems) {
         final ArrayList<String> choices = new ArrayList<>();        //stores the array of strings of the choices the user has checked
         final boolean[] checkedItems = new boolean[list.length];      // initialize boolean array size for each check box for the neutral button
-        final ArrayList<Integer> userItems = new ArrayList<>();   //holds items that the user has selected
+        //final ArrayList<Integer> userItems = new ArrayList<>();   //holds items that the user has selected
         AlertDialog.Builder builder = new AlertDialog.Builder(Preferences.this);    //build a pop-up display for 1-3 buttons allowing for chaining of calls
         builder.setTitle(title);  //set title text  for the dialog's window
-
+        for(int i = 0; i < userItems.size(); i++) {
+            checkedItems[userItems.get(i)] = true;
+        }
         builder.setMultiChoiceItems(list, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {    //passes the array string of the list of restaurants, and the array of check boxes of each item
             @Override                                               //a method is invoked when a button in the dialog is pressed
             public void onClick(DialogInterface dialog, int position, boolean isChecked) { //listener for each check boxes
