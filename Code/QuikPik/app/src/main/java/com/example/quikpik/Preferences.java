@@ -66,7 +66,7 @@ public class Preferences extends AppCompatActivity{
         final FirebaseUser currentUser = mAuth.getCurrentUser(); //initializes current logged in user
         user = new User(currentUser.getEmail()); //creates an object for user to store their info
 
-        DocumentReference docRef = FirebaseFirestore.getInstance().collection("user-references").document(currentUser.getEmail());
+        DocumentReference docRef = FirebaseFirestore.getInstance().collection("user-preferences").document(currentUser.getEmail());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -114,7 +114,7 @@ public class Preferences extends AppCompatActivity{
             }
         });
 
-        final DocumentReference ref = db.collection("user-references").document(currentUser.getEmail());   //initialize a reference to the database of the current user
+        final DocumentReference ref = db.collection("user-preferences").document(currentUser.getEmail());   //initialize a reference to the database of the current user
 
         done.setOnClickListener(new View.OnClickListener() {
             @Override
