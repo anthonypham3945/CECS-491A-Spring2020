@@ -46,10 +46,10 @@ public class Login extends AppCompatActivity {
         btnRegister = findViewById(R.id.btn_register_button);
         forgotPassword = findViewById(R.id.btn_reset_password);
 
-        if(mAuth.getCurrentUser() != null){ //if the user is already signed in then take them to the maps scree
-            startActivity(new Intent(getApplicationContext(),MainActivity.class));
-            finish();
-        }
+//        if(mAuth.getCurrentUser() != null){ //if the user is already signed in then take them to the maps scree
+//            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+//            finish();
+//        }
 
         btnRegister.setOnClickListener(new View.OnClickListener() {//when the register button is clicked
             @Override

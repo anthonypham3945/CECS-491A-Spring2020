@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 //Specify how often your app should request the device’s location//
 
-        request.setInterval(10000);
+        request.setInterval(1000000000);
 
 //Get the most accurate location data available//
 
