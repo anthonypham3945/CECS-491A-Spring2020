@@ -7,7 +7,9 @@
             android:id="@+id/home"
             android:icon="@drawable/home_icon"
             android:title="Home" />
-
+        <item
+            android:id="@+id/lookup"
+            android:title="Restaurant Search" />
         <item
             android:id="@+id/profile"
             android:icon="@drawable/yelp_icon"
