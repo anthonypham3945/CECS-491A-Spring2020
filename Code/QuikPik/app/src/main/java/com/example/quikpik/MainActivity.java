@@ -271,6 +271,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(profileActivity);//start the login activity
             finish();//finishes the process
         }
+        else if(item.getItemId() == R.id.lookup) { //if the restaurant lookup item is clicked
+            Intent profileActivity = new Intent(getApplicationContext(), RestaurantLookup.class);//takes the user to the restaurant lookup page
+            startActivity(profileActivity);//start the lookup activity
+            finish();//finishes the process
+        }
         else if(item.getItemId() == R.id.settings){ //if the logout item is clicked
             Intent profileActivity = new Intent(getApplicationContext(), Preference.class);//takes the user back to the login screen
             startActivity(profileActivity);//start the login activity
@@ -282,6 +287,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(loginActivity);//start the login activity
             finish();//finishes the process
         }
+
         return true;
     }
 
