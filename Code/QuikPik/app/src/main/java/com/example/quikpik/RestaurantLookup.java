@@ -44,4 +44,10 @@ public class RestaurantLookup extends AppCompatActivity {
             }
         });
     }
+
+    public void onBackPressed() {
+        Intent intent=new Intent(RestaurantLookup.this,MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }
