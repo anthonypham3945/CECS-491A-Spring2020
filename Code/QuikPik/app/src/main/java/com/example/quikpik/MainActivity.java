@@ -1,5 +1,21 @@
 package com.example.quikpik;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,49 +27,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.location.Location;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
-import com.hsalf.smilerating.SmileRating;
-import com.google.firebase.database.DatabaseReference;
-
-
-import io.opencensus.tags.Tag;
 
 /*class that controls the navigation drawer and manages scene fragments*/
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -123,9 +106,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Load_setting();
 
     }
-
-
-
 
 
     /*this method updates the navigator header with the current user email and photo*/
@@ -201,27 +181,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void onLocationResult(LocationResult locationResult) {
                     final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-//Get a reference to the database, so your app can perform read and write operations//
-
+                    //Get a reference to the database, so your app can perform read and write operations//
                     //DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
                     DocumentReference ref = db.collection("user-location").document(currentUser.getEmail());
                     Location location = locationResult.getLastLocation();
                     if (location != null) {
-
-//Save the location data to the database//
-
-                        ref.set(location);
+                        //Save the location data to the database//
+                            System.out.println("Saved Location.");
+                            ref.set(location);
                     }
                 }
             }, null);
         }
     }
-
-
-
-
-
     private void Load_setting(){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         boolean chk_night = sp.getBoolean("NIGHT",false);
@@ -274,6 +246,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else if(item.getItemId() == R.id.lookup) { //if the restaurant lookup item is clicked
             Intent profileActivity = new Intent(getApplicationContext(), RestaurantLookup.class);//takes the user to the restaurant lookup page
             startActivity(profileActivity);//start the lookup activity
+            finish();//finishes the process
+        }
+
+        else if(item.getItemId() == R.id.search) { //if the restaurant lookup item is clicked
+            Intent searchActivity = new Intent(getApplicationContext(), SearchFragment.class);//takes the user to the restaurant lookup page
+            startActivity(searchActivity);//start the lookup activity
             finish();//finishes the process
         }
         else if(item.getItemId() == R.id.settings){ //if the logout item is clicked

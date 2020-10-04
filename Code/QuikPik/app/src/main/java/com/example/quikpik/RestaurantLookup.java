@@ -10,8 +10,6 @@ import android.widget.ProgressBar;
 import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import java.util.ArrayList;
 
@@ -50,4 +48,5 @@ public class RestaurantLookup extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
 }
