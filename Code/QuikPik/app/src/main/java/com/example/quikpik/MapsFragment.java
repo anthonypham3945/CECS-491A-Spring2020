@@ -18,96 +18,57 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 /*this class provides the ViewModel of the maps fragment*/
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
-    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundle"; //key for loading a map bundle
-    MapView mMapView;//map view object
-    GoogleMap gmap;//google map object
+    private GoogleMap mMap;
+    private double lng;
+    private double lat;
+    private String name;
+    private String address;
 
-
-    /*this method loads the fragment that is in the xml file to the app*/
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_maps, container,false); // the view is "inflated" into the app
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_maps,
+                container, false);
+
+        if(getArguments() != null){
+            lng = getArguments().getDouble("lng");
+            lat = getArguments().getDouble("lat");
+            name = getArguments().getString("name");
+            address = getArguments().getString("address");
+        }
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.gmap);
+        mapFragment.getMapAsync(this);
+
         return view;
     }
 
-    /*this method creates the map in the xml file*/
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mMapView = view.findViewById(R.id.mapView);
-        if(mMapView != null){
-            mMapView.onCreate(null);
-            mMapView.onResume();
-            mMapView.getMapAsync(this);//syncs the map to the current version
-        }
-    }
-
-    /*this method updates the location of the map when it's ready*/
-    @Override
-    public void onMapReady(GoogleMap map) {
-        gmap = map;// the map passed is initialized
-        gmap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(new
-                LatLng(0, 0), 0));
-        if (gmap != null) {
-            MapsInitializer.initialize(getContext());//gets the current state of the map
-            //gmap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-            if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)//check if user enabled their location
-                    != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
-            map.setMyLocationEnabled(true); //lets map access user's current location
-            gmap.getUiSettings().setMyLocationButtonEnabled(true);
-        }
-
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        mMapView.onResume();
-    }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mMapView.onStart();
-    }
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        mMapView.onStop();
-    }
-    @Override
-    public void onPause() {
-        mMapView.onPause();
-        super.onPause();
-    }
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setMinZoomPreference(11);
 
-    @Override
-    public void onDestroy() {
-        mMapView.onDestroy();
-        super.onDestroy();
-    }
+        LatLng placeLoc = new LatLng(lat, lng);
 
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mMapView.onLowMemory();
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(placeLoc)
+                .title(name)
+                .snippet(address)
+                .icon(BitmapDescriptorFactory.defaultMarker( BitmapDescriptorFactory.HUE_BLUE));
+
+        Marker m = mMap.addMarker(markerOptions);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(placeLoc));
     }
 }

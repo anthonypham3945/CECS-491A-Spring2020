@@ -3,9 +3,26 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/container_fragment"/>
+        android:id="@+id/container_fragment">
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="false"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="@dimen/nav_header_height"
+            android:isIndicator="false"
+            android:numStars="5"
+            android:stepSize="0.5"
+            android:visibility="visible"
+            android:progressTint="@color/colorPrimaryRed"
+            />
+    </FrameLayout>
 
 </LinearLayout>

@@ -42,9 +42,14 @@
         android:onClick="searchByID"
         android:text="Search" />
 
+
+
+
+
     <TextView
         android:id="@+id/testingText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView" />
+
 </LinearLayout>

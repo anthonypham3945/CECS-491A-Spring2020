@@ -1,6 +1,7 @@
 package com.example.quikpik;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -11,8 +12,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +40,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.hsalf.smilerating.SmileRating;
+import com.hsalf.smileyrating.SmileyRating;
+
+import org.w3c.dom.Text;
 
 /*class that controls the navigation drawer and manages scene fragments*/
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -51,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int PERMISSIONS_REQUEST = 100;
 
 
+
     /*overrided method that creates the default state of the layout*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +67,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = findViewById(R.id.toolbar);//assigns tool bar to the toolbar in the xml file
         setSupportActionBar(toolbar);//gives toolbar action bar support
         mAuth = FirebaseAuth.getInstance();//gets the current athentication
+
+        final RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                //FirebaseFirestore op = FirebaseFirestore.getInstance();
+                //DocumentReference ref = op.collection("user-rating").document();
+                String YourRatingValue = String.valueOf(rating);
+                //ref.set(YourRatingValue);
+                //Toast.makeText(MainActivity.this, "Your Rating :" + YourRatingValue, Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
         //Check whether GPS tracking is enabled//
@@ -106,6 +126,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Load_setting();
 
     }
+
+
 
 
     /*this method updates the navigator header with the current user email and photo*/
@@ -232,10 +254,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(profileActivity);//start the login activity
             finish();//finishes the process
         }
-        /*else if(item.getItemId() == R.id.maps){//if the maps item is clicked
+        /*else if(item.getItemId() == R.id.nearby_restaurants){//if the maps item is clicked
             fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container_fragment, new MapsFragment());//replace the current fragment with the maps fragment
+            fragmentTransaction.replace(R.id.container_fragment, new PlacesRecyclerViewAdapter());//replace the current fragment with the maps fragment
             fragmentTransaction.commit();//commits the changes to the app
         }*/
         else if(item.getItemId() == R.id.profile){ //if the logout item is clicked
