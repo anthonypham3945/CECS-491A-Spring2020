@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             finish();//finishes the process
         }
         else if(item.getItemId() == R.id.lookup) { //if the restaurant lookup item is clicked
-            Intent profileActivity = new Intent(getApplicationContext(), RestaurantLookup.class);//takes the user to the restaurant lookup page
+            Intent profileActivity = new Intent(getApplicationContext(), YelpActivity.class);//takes the user to the restaurant lookup page
             startActivity(profileActivity);//start the lookup activity
             finish();//finishes the process
         }
