@@ -52,7 +52,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCppTKC91OHd4-7ySLwk8PRwTuEmJXvBbc" />
+            android:value="AIzaSyBO39VlB_M8vKWDyOhIt_U8GwjGsoUEkBY" />
 
         <uses-library android:name="com.google.android.maps" />
 

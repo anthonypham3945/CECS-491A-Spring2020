@@ -1,7 +1,6 @@
 package com.example.quikpik;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,11 +15,9 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,24 +38,18 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.libraries.places.api.model.Place;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.hsalf.smilerating.SmileRating;
-import com.hsalf.smileyrating.SmileyRating;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -131,11 +122,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return;
         }
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        int radius = 1000;
         Double lng = location.getLongitude();
         Double lat = location.getLatitude();
-        int radius = 1000;
-
-
 
         ArrayList<Place> list = search(lat, lng, radius);
         for(int i=0; i < list.size();i++) {
