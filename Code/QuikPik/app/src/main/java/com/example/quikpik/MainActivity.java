@@ -2,6 +2,7 @@ package com.example.quikpik;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -9,12 +10,16 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +40,10 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.libraries.places.api.model.Place;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -43,7 +51,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.hsalf.smilerating.SmileRating;
 import com.hsalf.smileyrating.SmileyRating;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 
 /*class that controls the navigation drawer and manages scene fragments*/
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -55,35 +75,86 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView; // initialize how the navigation looks
     FragmentManager fragmentManager;//manager of the fragment scenes
     FragmentTransaction fragmentTransaction;//switches from fragment to fragment
+    SupportMapFragment mapFragment;
     private static final int PERMISSIONS_REQUEST = 100;
 
+    private ListView mListView;
+    private View mLayout;
+    private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
+    private static final String API_KEY = "AIzaSyBO39VlB_M8vKWDyOhIt_U8GwjGsoUEkBY";
+    //private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
+    //private static final String TYPE_DETAILS = "/details";
+    private static final String TYPE_SEARCH = "/nearbysearch";
+    private static final String OUT_JSON = "/json?";
+    private static final String LOG_TAG = "ListRest";
 
 
     /*overrided method that creates the default state of the layout*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mapFragment = SupportMapFragment.newInstance();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);//assigns tool bar to the toolbar in the xml file
         setSupportActionBar(toolbar);//gives toolbar action bar support
         mAuth = FirebaseAuth.getInstance();//gets the current athentication
 
-        final RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                //FirebaseFirestore op = FirebaseFirestore.getInstance();
-                //DocumentReference ref = op.collection("user-rating").document();
-                String YourRatingValue = String.valueOf(rating);
-                //ref.set(YourRatingValue);
-                //Toast.makeText(MainActivity.this, "Your Rating :" + YourRatingValue, Toast.LENGTH_SHORT).show();
-            }
-        });
+//        final RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+//        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+//            @Override
+//            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+//                //FirebaseFirestore op = FirebaseFirestore.getInstance();
+//                //DocumentReference ref = op.collection("user-rating").document();
+//                String YourRatingValue = String.valueOf(rating);
+//                //ref.set(YourRatingValue);
+//                Toast.makeText(MainActivity.this, "Your Rating :" + YourRatingValue, Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+        Intent intent = getIntent();
+        String longitude = intent.getStringExtra("long");
+        String latitude = intent.getStringExtra("lat");
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        mLayout = findViewById(R.id.container_fragment);
+
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Double lng = location.getLongitude();
+        Double lat = location.getLatitude();
+        int radius = 1000;
+
+
+
+        ArrayList<Place> list = search(lat, lng, radius);
+        for(int i=0; i < list.size();i++) {
+            System.out.println("Hello");
+        }
+        if (list != null)
+        {
+            mListView = (ListView) findViewById(R.id.listView);
+            ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, list);
+            mListView.setAdapter(adapter);
+        }
+
+
+
 
 
         //Check whether GPS tracking is enabled//
 
-        LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+        //LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             finish();
         }
@@ -124,10 +195,135 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentTransaction.commit();
         updateNavHeader();//updates user in the header
         Load_setting();
+        //showRestaurants();
 
     }
 
+    public void startRestaurants() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED)
+        {
 
+            LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Double longitude = location.getLongitude();
+            Double latitude = location.getLatitude();
+        }
+    }
+
+    public void showRestaurants(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            // Permission is already available, show restaurants
+            Snackbar.make(mLayout,
+                    "Location permission available. Show restaurants.",
+                    Snackbar.LENGTH_SHORT).show();
+            startRestaurants();
+        } else {
+            // Permission is missing and must be requested.
+            requestLocationPermission();
+        }
+    }
+
+    private void requestLocationPermission() {
+        // Permission has not been granted and must be requested.
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // Display a SnackBar with a button to request the missing permission.
+            Snackbar.make(mLayout, "Location access is required to display restaurants near you.",
+                    Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Request the permission
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            PERMISSIONS_REQUEST);
+                }
+            }).show();
+
+        } else {
+            Snackbar.make(mLayout,
+                    "Permission is not available. Requesting location permission.",
+                    Snackbar.LENGTH_SHORT).show();
+            // Request the permission. The result will be received in onRequestPermissionResult().
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST);
+        }
+    }
+
+
+
+    public static ArrayList<Place> search(double lat, double lng, int radius) {
+        ArrayList<Place> resultList = null;
+
+        HttpURLConnection conn = null;
+        StringBuilder jsonResults = new StringBuilder();
+        try {
+            StringBuilder sb = new StringBuilder(PLACES_API_BASE);
+            sb.append(TYPE_SEARCH);
+            sb.append(OUT_JSON);
+            sb.append("location=" + String.valueOf(lat) + "," + String.valueOf(lng));
+            sb.append("&radius=" + String.valueOf(radius));
+            sb.append("&type=restaurant");
+            sb.append("&key=" + API_KEY);
+
+            URL url = new URL(sb.toString());
+            conn = (HttpURLConnection) url.openConnection();
+            InputStreamReader in = new InputStreamReader(conn.getInputStream());
+
+            int read;
+            char[] buff = new char[1024];
+            while ((read = in.read(buff)) != -1) {
+                jsonResults.append(buff, 0, read);
+            }
+        } catch (MalformedURLException e) {
+            Log.e(LOG_TAG, "Error processing Places API URL", e);
+            return resultList;
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error connecting to Places API", e);
+            return resultList;
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+
+        try {
+            // Create a JSON object hierarchy from the results
+            JSONObject jsonObj = new JSONObject(jsonResults.toString());
+            JSONArray predsJsonArray = jsonObj.getJSONArray("results");
+
+            // Extract the descriptions from the results
+            resultList = new ArrayList<Place>(predsJsonArray.length());
+            for (int i = 0; i < predsJsonArray.length(); i++) {
+                Place place = new Place();
+                place.reference = predsJsonArray.getJSONObject(i).getString("reference");
+                place.name = predsJsonArray.getJSONObject(i).getString("name");
+                resultList.add(place);
+            }
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "Error processing JSON results", e);
+        }
+
+        return resultList;
+    }
+
+
+    //Value Object for the ArrayList
+    public static class Place {
+        private String reference;
+        private String name;
+
+        public Place(){
+            super();
+        }
+        @Override
+        public String toString(){
+            return this.name; //This is what returns the name of each restaurant for array list
+        }
+    }
 
 
     /*this method updates the navigator header with the current user email and photo*/
@@ -254,12 +450,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(profileActivity);//start the login activity
             finish();//finishes the process
         }
-        /*else if(item.getItemId() == R.id.nearby_restaurants){//if the maps item is clicked
-            fragmentManager = getSupportFragmentManager();
-            fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container_fragment, new PlacesRecyclerViewAdapter());//replace the current fragment with the maps fragment
-            fragmentTransaction.commit();//commits the changes to the app
-        }*/
+        else if(item.getItemId() == R.id.nearby_place){//if the maps item is clicked
+//            fragmentManager = getSupportFragmentManager();
+//            fragmentTransaction = fragmentManager.beginTransaction();
+//            fragmentTransaction.replace(R.id.container_fragment, new MapsFragment());//replace the current fragment with the maps fragment
+//            fragmentTransaction.commit();//commits the changes to the app
+            Intent profileActivity = new Intent(getApplicationContext(), MapsActivity.class);//takes the user back to the login screen
+            startActivity(profileActivity);//start the login activity
+            finish();//finishes the process
+        }
         else if(item.getItemId() == R.id.profile){ //if the logout item is clicked
             Intent profileActivity = new Intent(getApplicationContext(), Preferences.class);//takes the user back to the login screen
             startActivity(profileActivity);//start the login activity
