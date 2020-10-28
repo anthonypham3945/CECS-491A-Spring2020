@@ -17,6 +17,11 @@
             android:icon="@drawable/magnifying_glass"/>
 
         <item
+            android:id="@+id/nearby_place"
+            android:title="Nearby Places"
+            android:icon="@drawable/current_location"/>
+
+        <item
             android:id="@+id/profile"
             android:icon="@drawable/yelp_icon"
             android:title="Preferences" />

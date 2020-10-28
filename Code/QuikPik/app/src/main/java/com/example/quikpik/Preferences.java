@@ -132,16 +132,16 @@ public class Preferences extends AppCompatActivity{
     }
 
 
-
-    /*method that hides the navigator when the back button is pressed*/
-    public void onBackPressed(){
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer);
-        if(drawer.isDrawerOpen(GravityCompat.START)){ // if the navigator is open
-            drawer.closeDrawer(GravityCompat.START);//close it
-    }else{
-        super.onBackPressed();// do normal back button functions
-    }
-}
+//
+//    /*method that hides the navigator when the back button is pressed*/
+//    public void onBackPressed(){
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer);
+//        if(drawer.isDrawerOpen(GravityCompat.START)){ // if the navigator is open
+//            drawer.closeDrawer(GravityCompat.START);//close it
+//    }else{
+//        super.onBackPressed();// do normal back button functions
+//    }
+//}
 
 
     /**
@@ -215,5 +215,11 @@ public class Preferences extends AppCompatActivity{
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#f34235"));
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#f34235"));
         dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#f34235"));
+    }
+
+    public void onBackPressed() {
+        Intent intent=new Intent(Preferences.this,MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

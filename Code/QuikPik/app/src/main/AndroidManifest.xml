@@ -28,6 +28,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ViewPlace"></activity>
         <activity android:name=".Preferences" />
         <activity android:name=".UserInfoActivity" />
         <activity android:name=".ForgotPasswordActivity" />
@@ -65,6 +66,5 @@
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
-
 
 </manifest>

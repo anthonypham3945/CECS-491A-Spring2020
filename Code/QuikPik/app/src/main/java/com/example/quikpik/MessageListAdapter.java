@@ -23,7 +23,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.opencensus.internal.Utils;
+//import io.opencensus.internal.Utils;
 
 public class MessageListAdapter extends RecyclerView.Adapter {
 
