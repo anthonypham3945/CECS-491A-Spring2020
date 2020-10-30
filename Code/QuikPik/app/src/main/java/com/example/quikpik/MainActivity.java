@@ -185,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         updateNavHeader();//updates user in the header
         Load_setting();
         //showRestaurants();
+        //
 
     }
 
