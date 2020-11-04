@@ -61,6 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Directions"
+                android:layout_weight="1"
                 android:textColor="@color/quantum_black_100"
                 android:textSize="10sp"
                 android:visibility="visible" />

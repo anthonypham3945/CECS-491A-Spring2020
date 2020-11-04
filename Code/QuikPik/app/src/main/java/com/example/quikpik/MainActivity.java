@@ -111,31 +111,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mLayout = findViewById(R.id.container_fragment);
 
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-           // return;
-        }
-        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        int radius = 1000;
-        Double lng = location.getLongitude();
-        Double lat = location.getLatitude();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Location location = lm.getLastKnownLocation(lm.GPS_PROVIDER);
+            int radius = 1000;
+            Double lng = location.getLongitude();
+            Double lat = location.getLatitude();
+            ArrayList<Place> list = search(lat, lng, radius);
+            for(int i=0; i < list.size();i++) {
+                System.out.println("Hello");
+            }
+            if (list != null)
+            {
+                mListView = (ListView) findViewById(R.id.listView);
+                ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, list);
+                mListView.setAdapter(adapter);
+            }
 
-        ArrayList<Place> list = search(lat, lng, radius);
-        for(int i=0; i < list.size();i++) {
-            System.out.println("Hello");
         }
-        if (list != null)
-        {
-            mListView = (ListView) findViewById(R.id.listView);
-            ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, list);
-            mListView.setAdapter(adapter);
-        }
+
+
+
+//        Location location = lm.getLastKnownLocation();
+//        int radius = 1000;
+//        Double lng = location.getLongitude();
+//        Double lat = location.getLatitude();
+//
+//        ArrayList<Place> list = search(lat, lng, radius);
+//        for(int i=0; i < list.size();i++) {
+//            System.out.println("Hello");
+//        }
+//        if (list != null)
+//        {
+//            mListView = (ListView) findViewById(R.id.listView);
+//            ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, list);
+//            mListView.setAdapter(adapter);
+//        }
+
+
 
 
 
@@ -393,6 +405,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
                     DocumentReference ref = db.collection("user-location").document(currentUser.getEmail());
                     Location location = locationResult.getLastLocation();
+
                     if (location != null) {
                         //Save the location data to the database//
                             System.out.println("Saved Location.");
