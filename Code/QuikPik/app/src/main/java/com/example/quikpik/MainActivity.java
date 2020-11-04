@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            return;
+           // return;
         }
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         int radius = 1000;
