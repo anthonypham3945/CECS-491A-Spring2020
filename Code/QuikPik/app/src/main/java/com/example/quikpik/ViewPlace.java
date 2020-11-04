@@ -1,7 +1,5 @@
 package com.example.quikpik;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,12 +10,11 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.example.quikpik.Model.Photos;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.quikpik.Model.PlaceDetail;
 import com.example.quikpik.Remote.IGoogleAPIService;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,9 +46,9 @@ public class ViewPlace extends AppCompatActivity {
         btn_directions = (Button) findViewById(R.id.btn_show_on_map);
 
 
-        place_name.setText("");
-        place_hours.setText("");
-        btn_directions.setText("");
+        //place_name.setText("");
+        //place_hours.setText("");
+        //btn_directions.setText("");
 
         btn_directions.setOnClickListener(new View.OnClickListener() {
             @Override
