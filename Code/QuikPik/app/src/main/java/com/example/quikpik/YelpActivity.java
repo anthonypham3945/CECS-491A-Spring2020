@@ -2,16 +2,21 @@ package com.example.quikpik;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,6 +44,8 @@ public class YelpActivity extends AppCompatActivity {
     private ImageView boxArt;
     private RestaurantRecyclerViewAdapter adapter;
     private RecyclerView restaurantRecyclerView;
+    Button refresh_button;
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,8 +95,8 @@ public class YelpActivity extends AppCompatActivity {
 
         //COMBINES CITY AND STATE
         String searchLocation = city + state;
-        String[] foods = {"Tacos",  "Pizza", "Chicken"};
-        int randomNum = ThreadLocalRandom.current().nextInt(0, 2 + 1);
+        String[] foods = {"Tacos",  "Pizza", "Chicken","Ramen", "Juice", "Ice Cream", "Chinese", "Mexican", "Burgers"};
+        int randomNum = ThreadLocalRandom.current().nextInt(0, foods.length-1 + 1);
 
         //API CALL TO SEARCH FOR LOCATIONS
         service.getTasks(API_KEY, foods[randomNum], searchLocation).enqueue(new retrofit2.Callback<YelpSearchResult>() {
@@ -114,11 +121,25 @@ public class YelpActivity extends AppCompatActivity {
             }
         });
 
+        refresh_button = (Button) findViewById(R.id.refresh_button);
+        refresh_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);            }
+        });
         //Glide.with(this).load(restaurants.get(1)).into(imageView);
 
         //getRestaurants("90745");
+
     }
 
+    public void onBackPressed() {
+        Intent intent=new Intent(YelpActivity.this,MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
     /*private void getRestaurants(String location) {
         final YelpService yelpService = new YelpService();
         yelpService.findRestaurants(location, new Callback() {
