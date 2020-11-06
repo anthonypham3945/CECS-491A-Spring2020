@@ -9,7 +9,8 @@
             android:title="Home" />
         <item
             android:id="@+id/lookup"
-            android:title="Restaurant Search" />
+            android:title="Restaurant Suggestion"
+            android:icon="@drawable/suggest_icon"/>
 
         <item
             android:id="@+id/search"
