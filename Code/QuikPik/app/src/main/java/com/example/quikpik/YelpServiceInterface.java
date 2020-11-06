@@ -15,7 +15,8 @@ public interface YelpServiceInterface {
     Call<YelpSearchResult> getTasks(
             @Header("Authorization") String authHeader,
             @Query("term") String searchTerm,
-            @Query("location") String location
+            @Query("latitude") Double latitude,
+            @Query("longitude") Double longitude
     );
 
 }

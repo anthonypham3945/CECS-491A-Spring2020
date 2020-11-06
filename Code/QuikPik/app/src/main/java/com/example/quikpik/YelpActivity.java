@@ -99,10 +99,10 @@ public class YelpActivity extends AppCompatActivity {
         int randomNum = ThreadLocalRandom.current().nextInt(0, foods.length-1 + 1);
         Button refreshButton;
         refreshButton = (Button) findViewById(R.id.refresh_button);
-        refreshButton.setText("Refresh Listings - Currently: (" + foods[randomNum] + " in " + searchLocation + " )");
+        refreshButton.setText("Refresh Listings - Currently: (" + foods[randomNum] + " in Lang:" + lng + " Lat: " + lat);
 
         //API CALL TO SEARCH FOR LOCATIONS
-        service.getTasks(API_KEY, foods[randomNum], searchLocation).enqueue(new retrofit2.Callback<YelpSearchResult>() {
+        service.getTasks(API_KEY, foods[randomNum], lat, lng).enqueue(new retrofit2.Callback<YelpSearchResult>() {
 
             @Override
             public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
