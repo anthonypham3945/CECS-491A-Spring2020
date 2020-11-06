@@ -94,12 +94,12 @@ public class YelpActivity extends AppCompatActivity {
         }
 
         //COMBINES CITY AND STATE
-        String searchLocation = city + state;
+        String searchLocation = city + " " + state;
         String[] foods = {"Tacos",  "Pizza", "Chicken", "Ramen", "Juice", "Ice Cream", "Chinese", "Mexican", "Burgers"};
         int randomNum = ThreadLocalRandom.current().nextInt(0, foods.length-1 + 1);
         Button refreshButton;
         refreshButton = (Button) findViewById(R.id.refresh_button);
-        refreshButton.setText("Refresh Listings - Currently: (" + foods[randomNum] + ")");
+        refreshButton.setText("Refresh Listings - Currently: (" + foods[randomNum] + " in " + searchLocation + " )");
 
         //API CALL TO SEARCH FOR LOCATIONS
         service.getTasks(API_KEY, foods[randomNum], searchLocation).enqueue(new retrofit2.Callback<YelpSearchResult>() {
