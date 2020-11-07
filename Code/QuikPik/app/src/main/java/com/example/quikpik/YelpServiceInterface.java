@@ -1,10 +1,5 @@
 package com.example.quikpik;
 
-import com.google.android.gms.tasks.Task;
-import com.google.protobuf.Any;
-
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
