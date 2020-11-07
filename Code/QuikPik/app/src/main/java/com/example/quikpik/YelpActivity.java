@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -45,46 +46,81 @@ public class YelpActivity extends AppCompatActivity {
     private RestaurantRecyclerViewAdapter adapter;
     private RecyclerView restaurantRecyclerView;
     Button refresh_button;
+    TextView information_text;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //links respective xml file activity_yelp.xml
         setContentView(R.layout.activity_yelp);
-        //initialize the recycler view
-        restaurantRecyclerView = findViewById(R.id.restaurant_list);
-        //ImageView imageView = (ImageView) findViewById(R.id.restaurantPic);
-        //Glide.with(this).load("https://i.imgur.com/i4ZEaLM.gif").into(imageView);
-        //restaurant = new Restaurant("Restaurant", "Placeholder alias", "https://upload.wikimedia.org/wikipedia/en/a/a3/Halo_TMCC_KeyArt_Vert_2019.png");
+        //sets up button refresh_button
+        refresh_button = (Button) findViewById(R.id.refresh_button);
+        information_text = (TextView) findViewById(R.id.information_text);
+        //Makes initial API call for restaurants.
+        makeAPICall();
+        //Handles Button Interactions
+        refresh_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //simply makes another API call which will repopulate recycler list view on page.
+                makeAPICall();
+            }
+        });
+    }
+    //when back pressed, returns to main activity.
+    public void onBackPressed() {
+        Intent intent=new Intent(YelpActivity.this,MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+
+    //Code for making main API call
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void makeAPICall()
+    {
+        //list of restaurants to display
         List<YelpRestaurant> restaurants = new ArrayList<>();
+        //retrofit initialization
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
+        YelpServiceInterface service = retrofit.create(YelpServiceInterface.class);
+        //used for getting location
+        Geocoder gcd = new Geocoder(this, Locale.getDefault());
+        //list of addresses (used in getting city/state name based on location.)
+        List<Address> addresses = null;
+
+        //sets up recyclerview
         adapter = new RestaurantRecyclerViewAdapter(this, restaurants);
+        restaurantRecyclerView = findViewById(R.id.restaurant_list);
         restaurantRecyclerView.setAdapter(adapter);
         restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
         restaurantRecyclerView.getLayoutManager().setMeasurementCacheEnabled(false);
-        //RestaurantAdapter adapter = new RestaurantAdapter(this, restaurants);
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
-        YelpServiceInterface service = retrofit.create(YelpServiceInterface.class);
-        //initiates network request
 
-        Double lat=0.0;
-        Double lng=0.0;
+        //location initialized to Mountain View, California
+        //latitude and longitude included for Mountain View.
+        Double lat=37.3861;
+        Double lng=122.0839;
         String city = "Mountain View";
         String state = "CA";
 
+        //starts location manager
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        //Permissions check
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            //gets location
             Location location = lm.getLastKnownLocation(lm.GPS_PROVIDER);
             int radius = 1000;
+            //latitude and longitude coordinates
             lng = location.getLongitude();
             lat = location.getLatitude();
         }
-
-        Geocoder gcd = new Geocoder(this, Locale.getDefault());
-        List<Address> addresses = null;
         try {
             addresses = gcd.getFromLocation(lat, lng, 1);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //grab city and state name if available, otherwise defaults to "Mountain View CA"
         if (addresses.size() > 0) {
             city = (addresses.get(0).getLocality());
             state = (addresses.get(0).getAdminArea());
@@ -93,15 +129,27 @@ public class YelpActivity extends AppCompatActivity {
 
         }
 
-        //COMBINES CITY AND STATE
-        String searchLocation = city + " " + state;
+        //Combines city/state to be formatted for API string
+        String searchLocation = city + ", " + state;
+
+        //TODO: Use Firebase Preferences instead of preset preferences!!!
         String[] foods = {"Tacos",  "Pizza", "Chicken", "Ramen", "Juice", "Ice Cream", "Chinese", "Mexican", "Burgers"};
+
+        //random number to select from list of food preferences.
+        //TODO: instead, make a shuffled list based on ALL user preferences.
         int randomNum = ThreadLocalRandom.current().nextInt(0, foods.length-1 + 1);
+
+        //sets up refresh button to display text
         Button refreshButton;
         refreshButton = (Button) findViewById(R.id.refresh_button);
-        refreshButton.setText("Refresh Listings - Currently: (" + foods[randomNum] + " in " + searchLocation + "Long:" + lng + " Lat: " + lat);
+        refreshButton.setText("Refresh Listings");
+        //sets up a string in HTML (the <b></b> allows for bold font)
+        String informationText = String.format("Showing listings for <b>%s</b> <br> in <b>%s</b> <br> @ <b>(%.2f lat, %.2f long)</b>", foods[randomNum], searchLocation, lat, lng);
+        //sets the TextView to the string created, displaying what they're searching for and the location.
+        information_text.setText(Html.fromHtml(informationText));
 
-        //API CALL TO SEARCH FOR LOCATIONS
+        //The actual API call code.
+        //consists of [KEY, TERM, LATITUDE, LONGITUDE]
         service.getTasks(API_KEY, foods[randomNum], lat, lng).enqueue(new retrofit2.Callback<YelpSearchResult>() {
 
             @Override
@@ -112,55 +160,12 @@ public class YelpActivity extends AppCompatActivity {
                 }
                 restaurants.addAll(response.body().restaurants);
                 adapter.notifyDataSetChanged();
-                /*if(response.isSuccessful()) {
-
-                }*/
             }
 
             @Override
             public void onFailure(retrofit2.Call<YelpSearchResult> call, Throwable t) {
                 Log.v(TAG, "Failed");
-                //Log.v("onFailure", t.toString());
             }
         });
-
-        refresh_button = (Button) findViewById(R.id.refresh_button);
-        refresh_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);            }
-        });
-        //Glide.with(this).load(restaurants.get(1)).into(imageView);
-
-        //getRestaurants("90745");
-
     }
-
-    public void onBackPressed() {
-        Intent intent=new Intent(YelpActivity.this,MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
-    /*private void getRestaurants(String location) {
-        final YelpService yelpService = new YelpService();
-        yelpService.findRestaurants(location, new Callback() {
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    String jsonData = response.body().string();
-                    Log.v(TAG, jsonData);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }*/
 }

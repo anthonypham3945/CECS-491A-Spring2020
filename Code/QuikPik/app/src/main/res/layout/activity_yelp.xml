@@ -6,9 +6,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".YelpActivity">
 
-
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,12 +18,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="Refresh Restaurants" />
+            android:text="Refresh Listings" />
+
+        <TextView
+            android:id="@+id/information_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="..."
+            android:textAlignment="center"
+            android:visibility="visible" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10sp"
+            ></Space>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/restaurant_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
 
 
     </LinearLayout>
