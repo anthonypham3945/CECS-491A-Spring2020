@@ -67,6 +67,7 @@ public class YelpActivity extends AppCompatActivity {
                 makeAPICall();
             }
         });
+
     }
     //when back pressed, returns to main activity.
     public void onBackPressed() {

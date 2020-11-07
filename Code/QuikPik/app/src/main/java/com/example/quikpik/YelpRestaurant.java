@@ -13,6 +13,7 @@ public class YelpRestaurant {
     String name;
     String price;
     @SerializedName("review_count") int numReviews;
+    @SerializedName("url") String url;
     @SerializedName("distance") double distanceInMeters;
     @SerializedName("location") @JsonAdapter(LocationDeserializer.class) String address;
     @SerializedName("rating")  String rating;

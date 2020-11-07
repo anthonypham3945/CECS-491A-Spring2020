@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.view.View.OnClickListener;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,7 +13,6 @@ import java.util.List;
 
 public class RestaurantRecyclerViewAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
     private List<YelpRestaurant> restaurants;
-
     public RestaurantRecyclerViewAdapter(Context context, List<YelpRestaurant> restaurants) {
         this.restaurants = restaurants;
     }
