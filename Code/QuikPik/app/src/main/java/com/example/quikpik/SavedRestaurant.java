@@ -42,9 +42,12 @@ public class SavedRestaurant extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 RestaurantList list = documentSnapshot.toObject(RestaurantList.class);
-                for(Restaurant rest : list.getRestaurants()) {
-                    restaurants.add(rest);
-                    adapter.notifyDataSetChanged();
+                if (list != null)
+                {
+                    for(Restaurant rest : list.getRestaurants()) {
+                        restaurants.add(rest);
+                        adapter.notifyDataSetChanged();
+                    }
                 }
             }
         });
