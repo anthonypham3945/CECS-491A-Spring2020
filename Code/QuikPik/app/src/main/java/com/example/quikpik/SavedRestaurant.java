@@ -1,16 +1,15 @@
 package com.example.quikpik;
 
+import android.content.Intent;
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -50,7 +49,15 @@ public class SavedRestaurant extends AppCompatActivity {
             }
         });
 
+        docRef.get().addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                setContentView(R.layout.activity_main);
+            }
+        });
+
     }
+
     //when back pressed, returns to main activity.
     public void onBackPressed() {
         Intent intent=new Intent(SavedRestaurant.this,MainActivity.class);
