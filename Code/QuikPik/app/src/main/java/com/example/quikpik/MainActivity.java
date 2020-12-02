@@ -489,6 +489,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(loginActivity);//start the login activity
             finish();//finishes the process
         }
+        else if(item.getItemId() == R.id.saved){ //if the logout item is clicked
+            Intent savedActivity = new Intent(getApplicationContext(), SavedRestaurant.class);//takes the user back to the login screen
+            startActivity(savedActivity);//start the login activity
+            finish();//finishes the process
+        }
 
         return true;
     }

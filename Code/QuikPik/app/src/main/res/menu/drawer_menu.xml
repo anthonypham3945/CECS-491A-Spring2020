@@ -34,6 +34,10 @@
             android:id="@+id/logout"
             android:icon="@drawable/logout_icon"
             android:title="Log Out" />
+        <item
+            android:id="@+id/saved"
+            android:icon="@drawable/ic_action_save"
+            android:title="Saved Restaurants" />
 
     </item>
 </menu>

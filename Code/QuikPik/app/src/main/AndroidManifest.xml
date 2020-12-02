@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.quikpik" >
+    package="com.example.quikpik">
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -28,11 +28,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".YelpActivity" >
-        </activity>
-
-        <activity android:name=".ViewPlace"></activity>
-
+        <activity android:name=".SavedRestaurant"></activity>
+        <activity android:name=".YelpActivity"></activity>
+        <activity android:name=".ViewPlace" />
         <activity android:name=".Preferences" />
         <activity android:name=".UserInfoActivity" />
         <activity android:name=".ForgotPasswordActivity" />
@@ -57,7 +55,7 @@
         <uses-library android:name="com.google.android.maps" />
 
         <activity android:name=".MapsActivity" />
-        <activity android:name=".Login" >
+        <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
