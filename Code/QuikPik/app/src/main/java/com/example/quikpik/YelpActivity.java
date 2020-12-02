@@ -89,7 +89,7 @@ public class YelpActivity extends AppCompatActivity {
         //used for getting location
         Geocoder gcd = new Geocoder(this, Locale.getDefault());
         //list of addresses (used in getting city/state name based on location.)
-        List<Address> addresses = null;
+
 
         //sets up recyclerview
         adapter = new RestaurantRecyclerViewAdapter(this, restaurants);
@@ -104,6 +104,13 @@ public class YelpActivity extends AppCompatActivity {
         Double lng=122.0839;
         String city = "Mountain View";
         String state = "CA";
+        Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = geoCoder.getFromLocation(lat, lng, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //starts location manager
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -118,6 +125,7 @@ public class YelpActivity extends AppCompatActivity {
         }
         try {
             addresses = gcd.getFromLocation(lat, lng, 1);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
