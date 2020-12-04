@@ -52,31 +52,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             reviewCount.setText(restaurant.getRating() + "/5 ★ (" + restaurant.getReviewCount()+ " Reviews)");
             addressText.setText(restaurant.getLocation());
             Glide.with(itemView).load(restaurant.getImageURL()).into(restaurantImage);
-            deleteButton.setText("Delete");
-            mAuth = FirebaseAuth.getInstance();//access firebase for current user
-            final FirebaseFirestore db = FirebaseFirestore.getInstance();   //retrieves an instance of the firestore database
-            final FirebaseUser currentUser = mAuth.getCurrentUser(); //initializes current logged in user
-            final DocumentReference ref = db.collection("user-restaurants").document(currentUser.getEmail());   //initialize a reference to the database of the current user
-            deleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(v.getContext(), "Deleted " + restaurant.getName() + " from Saved Restaurants", Toast.LENGTH_LONG).show();
-                    ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if(task.isSuccessful()) {
-                                DocumentSnapshot doc = task.getResult();
-                                if(doc.exists()) {
-                                    ref.update("restaurants", FieldValue.arrayRemove(restaurant));
-                                } else {
-                                    Toast.makeText(v.getContext(), "DOES NOT EXIST", Toast.LENGTH_LONG).show();
-                                }
-                            }
 
-                        }
-                    });
-                }
-            });
         }
     }
     /**
@@ -89,6 +65,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         localDataSet = dataSet;
     }
     // Create new views (invoked by the layout manager)
+    private FirebaseAuth mAuth;
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
@@ -103,6 +80,32 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         Restaurant rest = localDataSet.get(position);
         viewHolder.bind(rest);
+        viewHolder.            deleteButton.setText("Delete");
+        mAuth = FirebaseAuth.getInstance();//access firebase for current user
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();   //retrieves an instance of the firestore database
+        final FirebaseUser currentUser = mAuth.getCurrentUser(); //initializes current logged in user
+        final DocumentReference ref = db.collection("user-restaurants").document(currentUser.getEmail());   //initialize a reference to the database of the current user
+        viewHolder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(v.getContext(), "Deleted " + rest.getName() + " from Saved Restaurants", Toast.LENGTH_LONG).show();
+                ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()) {
+                            DocumentSnapshot doc = task.getResult();
+                            if(doc.exists()) {
+                                ref.update("restaurants", FieldValue.arrayRemove(rest));
+                                removeAt(position);
+                            } else {
+                                Toast.makeText(v.getContext(), "DOES NOT EXIST", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                    }
+                });
+            }
+        });
 
     }
 
@@ -110,5 +113,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     @Override
     public int getItemCount() {
         return localDataSet.size();
+    }
+    private void removeAt(int position) {
+        localDataSet.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, localDataSet.size());
     }
 }
