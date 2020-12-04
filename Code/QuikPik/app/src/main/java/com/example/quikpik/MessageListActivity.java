@@ -15,7 +15,7 @@ public class MessageListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_main);
 
-        mMessageRecycler = (ListView) findViewById(R.id.MessageList);
+        //mMessageRecycler = (ListView) findViewById(R.id.MessageList);
         //mMessageAdapter = new MessageListAdapter(this, messageList);
     }
 }

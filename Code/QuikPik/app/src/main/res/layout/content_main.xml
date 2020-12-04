@@ -3,6 +3,37 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/refresh_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:text="Refresh Listings" />
+
+    <TextView
+        android:id="@+id/information_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="..."
+        android:textAlignment="center"
+        android:visibility="visible" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10sp"
+        ></Space>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/restaurant_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
+
+
+
 
 
 
@@ -11,18 +42,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
-            android:id="@+id/listView"
-            style="@android:style/Widget.DeviceDefault.Light.ListView"
-            android:layout_width="match_parent"
-            android:layout_height="540dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp" />
+<!--        <ListView-->
+<!--            android:id="@+id/listView"-->
+<!--            style="@android:style/Widget.DeviceDefault.Light.ListView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="540dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginStart="8dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:layout_marginEnd="8dp"-->
+<!--            android:layout_marginBottom="8dp" />-->
 
     </FrameLayout>
+
+
+
+
+
 
 
 </LinearLayout>

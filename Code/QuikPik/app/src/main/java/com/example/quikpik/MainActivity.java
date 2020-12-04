@@ -6,15 +6,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -22,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -31,6 +37,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -55,6 +63,14 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.ThreadLocalRandom;
+
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /*class that controls the navigation drawer and manages scene fragments*/
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -67,6 +83,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FragmentManager fragmentManager;//manager of the fragment scenes
     FragmentTransaction fragmentTransaction;//switches from fragment to fragment
     SupportMapFragment mapFragment;
+
+    TextView mLocationTextView;
+    private TextView title, alias;
+    private ImageView boxArt;
+    private RestaurantRecyclerViewAdapter adapter;
+    private RecyclerView restaurantRecyclerView;
+    Button refresh_button;
+    TextView information_text;
+    private static final String BASE_URL = "https://api.yelp.com/v3/";
+    private static final String API_KEY2 = "Bearer FzyeiETw6JAgMPWfM62hPYyBlK0OYtNDHwPZ0XK9rhLz1zlFOb_qlL09OaQqJBnCuQCYciWuaBjvhW6pXC5tNvuh63yvaolx_6GCKeLu-PJ7C2e5fFBdBZJpDzF2X3Yx";
+
+    public static final String TAG = "Yelp";
+
     private static final int PERMISSIONS_REQUEST = 100;
 
     private ListView mListView;
@@ -81,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     /*overrided method that creates the default state of the layout*/
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mapFragment = SupportMapFragment.newInstance();
@@ -90,6 +120,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = findViewById(R.id.toolbar);//assigns tool bar to the toolbar in the xml file
         setSupportActionBar(toolbar);//gives toolbar action bar support
         mAuth = FirebaseAuth.getInstance();//gets the current athentication
+
+
+        refresh_button = (Button) findViewById(R.id.refresh_button);
+        information_text = (TextView) findViewById(R.id.information_text);
+
+        makeAPICall();
+
+        refresh_button.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onClick(View v) {
+                //simply makes another API call which will repopulate recycler list view on page.
+                makeAPICall();
+            }
+        });
 
 //        final RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
 //        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -120,12 +165,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             for(int i=0; i < list.size();i++) {
                 System.out.println("Hello");
             }
-            if (list != null)
-            {
-                mListView = (ListView) findViewById(R.id.listView);
-                ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, list);
-                mListView.setAdapter(adapter);
-            }
+//            if (list != null)
+//            {
+//                mListView = (ListView) findViewById(R.id.listView);
+//                ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, list);
+//                mListView.setAdapter(adapter);
+//            }
 
         }
 
@@ -200,6 +245,115 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //
 
     }
+
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void makeAPICall()
+    {
+        //list of restaurants to display
+        List<YelpRestaurant> restaurants = new ArrayList<>();
+        //retrofit initialization
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
+        YelpServiceInterface service = retrofit.create(YelpServiceInterface.class);
+        //used for getting location
+        Geocoder gcd = new Geocoder(this, Locale.getDefault());
+        //list of addresses (used in getting city/state name based on location.)
+
+
+        //sets up recyclerview
+        adapter = new RestaurantRecyclerViewAdapter(this, restaurants);
+        restaurantRecyclerView = findViewById(R.id.restaurant_list);
+        restaurantRecyclerView.setAdapter(adapter);
+        restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+        restaurantRecyclerView.getLayoutManager().setMeasurementCacheEnabled(false);
+
+        //location initialized to Mountain View, California
+        //latitude and longitude included for Mountain View.
+        Double lat=37.3861;
+        Double lng=122.0839;
+        String city = "Mountain View";
+        String state = "CA";
+        Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = geoCoder.getFromLocation(lat, lng, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //starts location manager
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        //Permissions check
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            //gets location
+            Location location = lm.getLastKnownLocation(lm.GPS_PROVIDER);
+            int radius = 1000;
+            //latitude and longitude coordinates
+            lng = location.getLongitude();
+            lat = location.getLatitude();
+        }
+        try {
+            addresses = gcd.getFromLocation(lat, lng, 1);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //grab city and state name if available, otherwise defaults to "Mountain View CA"
+        if (addresses.size() > 0) {
+            city = (addresses.get(0).getLocality());
+            state = (addresses.get(0).getAdminArea());
+        }
+        else {
+
+        }
+
+        //Combines city/state to be formatted for API string
+        String searchLocation = city + ", " + state;
+
+        //TODO: Use Firebase Preferences instead of preset preferences!!!
+        String[] foods = {"Tacos",  "Pizza", "Chicken", "Ramen", "Juice", "Ice Cream", "Chinese", "Mexican", "Burgers"};
+
+        //random number to select from list of food preferences.
+        //TODO: instead, make a shuffled list based on ALL user preferences.
+        int randomNum = ThreadLocalRandom.current().nextInt(0, foods.length-1 + 1);
+
+        //sets up refresh button to display text
+        Button refreshButton;
+        refreshButton = (Button) findViewById(R.id.refresh_button);
+        refreshButton.setText("Refresh Listings");
+        //sets up a string in HTML (the <b></b> allows for bold font)
+        String informationText = String.format("Showing listings for <b>%s</b> <br> in <b>%s</b> <br> @ <b>(%.2f lat, %.2f long)</b>", foods[randomNum], searchLocation, lat, lng);
+        //sets the TextView to the string created, displaying what they're searching for and the location.
+        information_text.setText(Html.fromHtml(informationText));
+
+        //The actual API call code.
+        //consists of [KEY, TERM, LATITUDE, LONGITUDE]
+        service.getTasks(API_KEY2, foods[randomNum], lat, lng).enqueue(new retrofit2.Callback<YelpSearchResult>() {
+
+            @Override
+            public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
+                //Log.i(TAG, response.toString());
+                if(response.body() == null) {
+                    Log.i(TAG, "Did not receive valid response");
+                }
+                restaurants.addAll(response.body().restaurants);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<YelpSearchResult> call, Throwable t) {
+                Log.v(TAG, "Failed");
+            }
+        });
+    }
+
+
+
+
+
+
 
     public void startRestaurants() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -467,17 +621,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(profileActivity);//start the login activity
             finish();//finishes the process
         }
-        else if(item.getItemId() == R.id.lookup) { //if the restaurant lookup item is clicked
-            Intent profileActivity = new Intent(getApplicationContext(), YelpActivity.class);//takes the user to the restaurant lookup page
-            startActivity(profileActivity);//start the lookup activity
-            finish();//finishes the process
-        }
+//        else if(item.getItemId() == R.id.lookup) { //if the restaurant lookup item is clicked
+//            Intent profileActivity = new Intent(getApplicationContext(), YelpActivity.class);//takes the user to the restaurant lookup page
+//            startActivity(profileActivity);//start the lookup activity
+//            finish();//finishes the process
+//        }
 
-        else if(item.getItemId() == R.id.search) { //if the restaurant lookup item is clicked
-            Intent searchActivity = new Intent(getApplicationContext(), SearchFragment.class);//takes the user to the restaurant lookup page
-            startActivity(searchActivity);//start the lookup activity
-            finish();//finishes the process
-        }
+//        else if(item.getItemId() == R.id.search) { //if the restaurant lookup item is clicked
+//            Intent searchActivity = new Intent(getApplicationContext(), SearchFragment.class);//takes the user to the restaurant lookup page
+//            startActivity(searchActivity);//start the lookup activity
+//            finish();//finishes the process
+//        }
         else if(item.getItemId() == R.id.settings){ //if the logout item is clicked
             Intent profileActivity = new Intent(getApplicationContext(), Preference.class);//takes the user back to the login screen
             startActivity(profileActivity);//start the login activity

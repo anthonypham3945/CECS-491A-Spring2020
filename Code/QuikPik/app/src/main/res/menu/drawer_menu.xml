@@ -7,15 +7,15 @@
             android:id="@+id/home"
             android:icon="@drawable/home_icon"
             android:title="Home" />
-        <item
-            android:id="@+id/lookup"
-            android:title="Restaurant Suggestion"
-            android:icon="@drawable/suggest_icon"/>
+<!--        <item-->
+<!--            android:id="@+id/lookup"-->
+<!--            android:title="Restaurant Suggestion"-->
+<!--            android:icon="@drawable/suggest_icon"/>-->
 
-        <item
-            android:id="@+id/search"
-            android:title="Search for a Restaurant"
-            android:icon="@drawable/magnifying_glass"/>
+<!--        <item-->
+<!--            android:id="@+id/search"-->
+<!--            android:title="Search for a Restaurant"-->
+<!--            android:icon="@drawable/magnifying_glass"/>-->
 
         <item
             android:id="@+id/nearby_place"
@@ -31,13 +31,14 @@
             android:icon="@drawable/setting_icoon"
             android:title="Settings" />
         <item
-            android:id="@+id/logout"
-            android:icon="@drawable/logout_icon"
-            android:title="Log Out" />
-        <item
             android:id="@+id/saved"
             android:icon="@drawable/ic_action_save"
             android:title="Saved Restaurants" />
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/logout_icon"
+            android:title="Log Out" />
+
 
     </item>
 </menu>
