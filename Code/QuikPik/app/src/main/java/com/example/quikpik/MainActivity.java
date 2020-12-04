@@ -18,7 +18,6 @@ import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -85,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SupportMapFragment mapFragment;
 
     TextView mLocationTextView;
+
     private TextView title, alias;
     private ImageView boxArt;
     private RestaurantRecyclerViewAdapter adapter;
@@ -575,9 +575,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(chk_night){
             drawerLayout.setBackgroundColor(Color.parseColor("#222222"));
             toolbar.setBackgroundColor(Color.parseColor("#222222"));
+            information_text.setTextColor(Color.parseColor(("white")));
             //navigationView.setBackgroundColor(Color.parseColor("#222222"));
+
         }
         else{
+            information_text.setTextColor(Color.parseColor("black"));
             drawerLayout.setBackgroundColor(Color.parseColor("white"));
             toolbar.setBackgroundColor(Color.parseColor("#0097a7"));
 

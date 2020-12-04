@@ -8,13 +8,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:text="Refresh Listings" />
-
+        android:text="Refresh Listings"
+        android:layout_marginLeft="150sp"
+        android:layout_marginTop="5sp"
+        android:gravity="center"/>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10sp"
+        ></Space>
     <TextView
         android:id="@+id/information_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="..."
+        android:textColor="@color/colorPrimary"
         android:textAlignment="center"
         android:visibility="visible" />
     <Space
