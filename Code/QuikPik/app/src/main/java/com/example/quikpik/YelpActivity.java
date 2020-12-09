@@ -17,6 +17,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -25,8 +35,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import retrofit2.Call;
@@ -47,7 +59,8 @@ public class YelpActivity extends AppCompatActivity {
     private RecyclerView restaurantRecyclerView;
     Button refresh_button;
     TextView information_text;
-
+    private FirebaseAuth mAuth;//user in the firebase db
+    User user;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,24 +155,45 @@ public class YelpActivity extends AppCompatActivity {
         String searchLocation = city + ", " + state;
 
         //TODO: Use Firebase Preferences instead of preset preferences!!!
-        String[] foods = {"Tacos",  "Pizza", "Chicken", "Ramen", "Juice", "Ice Cream", "Chinese", "Mexican", "Burgers"};
+        //String[] foods = {"Tacos",  "Pizza", "Chicken", "Ramen", "Juice", "Ice Cream", "Chinese", "Mexican", "Burgers"};
+        final String[][] foods = new String[1][1];
 
         //random number to select from list of food preferences.
         //TODO: instead, make a shuffled list based on ALL user preferences.
-        int randomNum = ThreadLocalRandom.current().nextInt(0, foods.length-1 + 1);
 
         //sets up refresh button to display text
         Button refreshButton;
         refreshButton = (Button) findViewById(R.id.refresh_button);
         refreshButton.setText("Refresh Listings");
         //sets up a string in HTML (the <b></b> allows for bold font)
+
+
+        mAuth = FirebaseAuth.getInstance();//access firebase for current user
+        final FirebaseUser currentUser = mAuth.getCurrentUser(); //initializes current logged in user
+        user = new User(currentUser.getEmail()); //creates an object for user to store their info
+        final ArrayList<String>[] choices = new ArrayList[]{new ArrayList<String>()};
+        DocumentReference docRef = FirebaseFirestore.getInstance().collection("user-preferences").document(currentUser.getEmail());
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User list = documentSnapshot.toObject(User.class);
+                if (list != null)
+                {
+                    int counter = 0;
+                    foods[0] = new String[list.getRestaurantChoices().size()];
+                    for(String choice : list.getRestaurantChoices()) {
+                        foods[0][counter++] = choice;
+                    }
+                }
+            }
+        });
+        int randomNum = ThreadLocalRandom.current().nextInt(0, foods[0].length-1 + 1);
         String informationText = String.format("Showing listings for <b>%s</b> <br> in <b>%s</b> <br> @ <b>(%.2f lat, %.2f long)</b>", foods[randomNum], searchLocation, lat, lng);
         //sets the TextView to the string created, displaying what they're searching for and the location.
         information_text.setText(Html.fromHtml(informationText));
-
         //The actual API call code.
         //consists of [KEY, TERM, LATITUDE, LONGITUDE]
-        service.getTasks(API_KEY, foods[randomNum], lat, lng).enqueue(new retrofit2.Callback<YelpSearchResult>() {
+        service.getTasks(API_KEY, foods[0][randomNum], lat, lng).enqueue(new retrofit2.Callback<YelpSearchResult>() {
 
             @Override
             public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {

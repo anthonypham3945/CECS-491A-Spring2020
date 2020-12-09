@@ -45,11 +45,16 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.model.Place;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
@@ -62,8 +67,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import retrofit2.Call;
@@ -323,30 +330,80 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Button refreshButton;
         refreshButton = (Button) findViewById(R.id.refresh_button);
         refreshButton.setText("Refresh Listings");
-        //sets up a string in HTML (the <b></b> allows for bold font)
-        String informationText = String.format("Showing listings for <b>%s</b> <br> in <b>%s</b> <br> @ <b>(%.2f lat, %.2f long)</b>", foods[randomNum], searchLocation, lat, lng);
-        //sets the TextView to the string created, displaying what they're searching for and the location.
-        information_text.setText(Html.fromHtml(informationText));
+
 
         //The actual API call code.
         //consists of [KEY, TERM, LATITUDE, LONGITUDE]
-        service.getTasks(API_KEY2, foods[randomNum], lat, lng).enqueue(new retrofit2.Callback<YelpSearchResult>() {
-
+        FirebaseAuth mAuth;//user in the firebase db
+        User user;
+        mAuth = FirebaseAuth.getInstance();//access firebase for current user
+        final FirebaseUser currentUser = mAuth.getCurrentUser(); //initializes current logged in user
+        user = new User(currentUser.getEmail()); //creates an object for user to store their info
+        DocumentReference docRef = FirebaseFirestore.getInstance().collection("user-preferences").document(currentUser.getEmail());
+        Double finalLat = lat;
+        Double finalLng = lng;
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
-                //Log.i(TAG, response.toString());
-                if(response.body() == null) {
-                    Log.i(TAG, "Did not receive valid response");
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()) {
+                        ArrayList<String> choices = (ArrayList<String>) doc.get("Restaurant Choices");
+                        if(choices.size() != 0) {
+                            int randomNum = ThreadLocalRandom.current().nextInt(0, choices.size());
+                            String choice = choices.get(randomNum);
+                            //sets up a string in HTML (the <b></b> allows for bold font)
+                            String informationText = String.format("Showing listings for <b>%s</b> <br> in <b>%s</b> <br> @ <b>(%.2f lat, %.2f long)</b>", choice, searchLocation, finalLat, finalLng);
+                            //sets the TextView to the string created, displaying what they're searching for and the location.
+                            information_text.setText(Html.fromHtml(informationText));
+                            service.getTasks(API_KEY2, choice, finalLat, finalLng).enqueue(new retrofit2.Callback<YelpSearchResult>() {
+                                @Override
+                                public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
+                                    //Log.i(TAG, response.toString());
+                                    if (response.body() == null) {
+                                        Log.i(TAG, "Did not receive valid response");
+                                    }
+                                    restaurants.addAll(response.body().restaurants);
+                                    adapter.notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void onFailure(retrofit2.Call<YelpSearchResult> call, Throwable t) {
+                                    Log.v(TAG, "Failed");
+                                }
+                            });
+
+                        } else {
+                            //sets up a string in HTML (the <b></b> allows for bold font)
+                            String choice = foods[randomNum];
+                            String informationText = String.format("Showing listings for <b>%s</b> <br> in <b>%s</b> <br> @ <b>(%.2f lat, %.2f long)</b>", choice, searchLocation, finalLat, finalLng);
+                            //sets the TextView to the string created, displaying what they're searching for and the location.
+                            information_text.setText(Html.fromHtml(informationText));
+                            service.getTasks(API_KEY2, choice, finalLat, finalLng).enqueue(new retrofit2.Callback<YelpSearchResult>() {
+                                @Override
+                                public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
+                                    //Log.i(TAG, response.toString());
+                                    if(response.body() == null) {
+                                        Log.i(TAG, "Did not receive valid response");
+                                    }
+                                    restaurants.addAll(response.body().restaurants);
+                                    adapter.notifyDataSetChanged();
+                                }
+                                @Override
+                                public void onFailure(retrofit2.Call<YelpSearchResult> call, Throwable t) {
+                                    Log.v(TAG, "Failed");
+                                }
+                            });
+                        }
+                    } else {
+
+                    }
                 }
-                restaurants.addAll(response.body().restaurants);
-                adapter.notifyDataSetChanged();
-            }
 
-            @Override
-            public void onFailure(retrofit2.Call<YelpSearchResult> call, Throwable t) {
-                Log.v(TAG, "Failed");
             }
         });
+
+
     }
 
 
